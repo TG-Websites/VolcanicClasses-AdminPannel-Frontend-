@@ -12,11 +12,12 @@ interface FilterDropdownProps {
     startDate?: string;
     endDate?: string;
   }) => void;
+  onCancel?: () => void; 
 }
 
-const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply }) => {
+const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply,onCancel }) => {
   const [tempStatus, setTempStatus] = useState("");
-  const [tempCourse, setTempCourse] = useState(""); // stores real courseId
+  const [tempCourse, setTempCourse] = useState(""); 
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [showFilter, setShowFilter] = useState(false);
@@ -30,6 +31,16 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply }) => {
     });
     setShowFilter(false);
   };
+
+  const handleCancel = () => {
+    setTempStatus("");
+    setTempCourse("");
+    setStartDate(null);
+    setEndDate(null);
+    setShowFilter(false);
+    if (onCancel) onCancel(); // 👈 trigger parent onCancel if provided
+  };
+
 
   return (
     <div className="relative inline-block">
@@ -102,16 +113,10 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply }) => {
           {/* Buttons */}
           <div className="flex justify-end gap-2 pt-2">
             <button
-              onClick={() => {
-                setTempStatus("");
-                setTempCourse("");
-                setStartDate(null);
-                setEndDate(null);
-                setShowFilter(false);
-              }}
+              onClick={handleCancel}
               className="px-4 py-1 text-sm rounded bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500"
             >
-              Cancel
+              Clear Filter
             </button>
             <button
               onClick={handleApply}

@@ -4,10 +4,11 @@ import { FiFilter } from "react-icons/fi";
 
 interface FilterDropdownProps {
   courses?: string[];
-  onApply: (filters: { role?: string;  }) => void;
+  onApply: (filters: { role?: string; }) => void;
+  onCancel?: () => void;
 }
 
-const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply }) => {
+const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply,onCancel }) => {
   const [tempRole, setTempRole] = useState("");
   const [showFilter, setShowFilter] = useState(false);
 
@@ -16,6 +17,12 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply }) => {
       role: tempRole || undefined,
     });
     setShowFilter(false);
+  };
+
+  const handleCancel = () => {
+    setTempRole("");
+    setShowFilter(false);
+    if (onCancel) onCancel(); // 👈 trigger parent onCancel if provided
   };
 
   return (
@@ -51,13 +58,10 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply }) => {
           {/* Buttons */}
           <div className="flex justify-end gap-2 pt-2">
             <button
-              onClick={() => {
-                setTempRole("");
-                setShowFilter(false);
-              }}
+              onClick={handleCancel}
               className="px-4 py-1 text-sm rounded bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500"
             >
-              Cancel
+              Clear Filter
             </button>
             <button
               onClick={handleApply}

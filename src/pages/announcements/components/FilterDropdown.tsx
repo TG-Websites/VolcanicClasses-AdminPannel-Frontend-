@@ -6,9 +6,10 @@ import { format } from "date-fns";
 
 interface FilterDropdownProps {
   onApply: (filters: { startDate?: string; endDate?: string }) => void;
+    onCancel?: () => void;
 }
 
-const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply }) => {
+const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply,onCancel }) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [showFilter, setShowFilter] = useState(false);
@@ -19,6 +20,13 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply }) => {
       endDate: endDate ? format(endDate, "yyyy-MM-dd") : undefined,
     });
     setShowFilter(false);
+  };
+
+   const handleCancel = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setShowFilter(false);
+    if (onCancel) onCancel(); 
   };
 
   return (
@@ -65,14 +73,10 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply }) => {
           {/* Buttons */}
           <div className="flex justify-end gap-2 pt-2">
             <button
-              onClick={() => {
-                setStartDate(null);
-                setEndDate(null);
-                setShowFilter(false);
-              }}
+              onClick={handleCancel}
               className="px-4 py-1 text-sm rounded bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500"
             >
-              Cancel
+              Clear Filter
             </button>
             <button
               onClick={handleApply}

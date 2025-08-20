@@ -98,7 +98,7 @@ const AllOrders = () => {
             </button>
           </div>
 
-          <FilterDropdown onApply={handleApplyFilters} />
+          <FilterDropdown onApply={handleApplyFilters} onCancel={handleReload}  />
         </div>
       </div>
 

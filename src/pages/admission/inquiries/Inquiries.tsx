@@ -87,7 +87,7 @@ const EnquiriesPage: React.FC = () => {
           </div>
 
 
-          <FilterDropdown onApply={handleApplyFilters} />
+          <FilterDropdown onApply={handleApplyFilters} onCancel={handleReload} />
         </div>
       </div>
 
