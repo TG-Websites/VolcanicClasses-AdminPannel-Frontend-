@@ -53,11 +53,34 @@ interface Announcement {
   createdAt: string;
 }
 
+interface Schedule {
+  isCancelled: boolean;
+  _id: string;
+  course: string;
+  instructor: string;
+  date: string;
+  time: string;
+  mode: string;
+  link: string;
+  createdAt: string;
+  __v: number;
+}
+
+interface UpcomingLiveClass {
+  course: {
+    _id: string;
+    title: string;
+  };
+  schedules: Schedule[];
+}
+
+
 interface StudentHomeData {
   purchasedCourses: PurchasedCourse[];
-  upcomingLiveClasses: []; 
+  upcomingLiveClasses: UpcomingLiveClass[]; 
   announcements: Announcement[];
 }
+
 
 interface StudentHomeState {
   loading: boolean;

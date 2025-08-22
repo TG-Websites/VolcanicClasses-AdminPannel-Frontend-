@@ -7,17 +7,18 @@ import {
   FaTable,
   FaTh,
 } from "react-icons/fa";
+import { FiEdit } from "react-icons/fi";
+import { useNavigate } from "react-router";
 
 export interface Inquiry {
   _id: string;
-  status: "pending" | "approved" | "rejected" | "waitlisted";
   name: string;
   phone: number;
   email: string;
   courseInterest: {
-  _id: string;
-  title: string;
-};
+    _id: string;
+    title: string;
+  };
   message: string;
   createdAt: string;
 }
@@ -32,26 +33,14 @@ interface InquiryListProps {
 
 
 const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
-  const [inquiryList, setInquiryList] = useState<Inquiry[]>(inquiries);
+  const [inquiryList] = useState<Inquiry[]>(inquiries);
   const [viewMode, setViewMode] = useState<"card" | "table">("card");
+  const navigate = useNavigate();
 
-  const statusColor = {
-    pending:
-      "bg-yellow-100 text-yellow-800 dark:bg-yellow-200 dark:text-yellow-900",
-    approved:
-      "bg-green-100 text-green-800 dark:bg-green-200 dark:text-green-900",
-    rejected: "bg-red-100 text-red-800 dark:bg-red-200 dark:text-red-900",
-    waitlisted:
-      "bg-blue-100 text-blue-800 dark:bg-blue-200 dark:text-blue-900",
+
+   const handleEdit = (id: string) => {
+    navigate(`/admission/inquiries/${id}`);
   };
-
-  const handleStatusChange = (id: string, newStatus: Inquiry["status"]) => {
-    const updated = inquiryList.map((inquiry) =>
-      inquiry._id === id ? { ...inquiry, status: newStatus } : inquiry
-    );
-    setInquiryList(updated);
-  };
-
 
 
   return (
@@ -98,21 +87,10 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
                     <FaUser className="text-brand-500" />
                     {inquiry.name}
                   </h3>
-                  <select
-                    value={inquiry.status}
-                    onChange={(e) =>
-                      handleStatusChange(
-                        inquiry._id,
-                        e.target.value as Inquiry["status"]
-                      )
-                    }
-                    className={`text-xs px-2 py-1 rounded font-semibold border ${statusColor[inquiry.status]} dark:border-gray-600`}
-                  >
-                    <option value="pending">Pending</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="waitlisted">Waitlisted</option>
-                  </select>
+                  <FiEdit
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer"
+                    onClick={() => handleEdit(inquiry._id)}
+                  />
                 </div>
 
                 <div className="text-sm space-y-2 text-gray-700 dark:text-gray-300">
@@ -154,7 +132,7 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-800">
               <tr>
-                {["Name", "Contact", "Course", "Message", "Created", "Status"].map(
+                {["Name", "Contact", "Course", "Message", "Created", "Edit"].map(
                   (header) => (
                     <th
                       key={header}
@@ -202,21 +180,10 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
                       {new Date(inquiry.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <select
-                        value={inquiry.status}
-                        onChange={(e) =>
-                          handleStatusChange(
-                            inquiry._id,
-                            e.target.value as Inquiry["status"]
-                          )
-                        }
-                        className={`text-xs px-2 py-1 rounded font-semibold border ${statusColor[inquiry.status]} dark:border-gray-600`}
-                      >
-                        <option value="pending">Pending</option>
-                        <option value="approved">Approved</option>
-                        <option value="rejected">Rejected</option>
-                        <option value="waitlisted">Waitlisted</option>
-                      </select>
+                      <FiEdit
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer"
+                        onClick={() => handleEdit(inquiry._id)}
+                      />
                     </td>
                   </tr>
                 ))

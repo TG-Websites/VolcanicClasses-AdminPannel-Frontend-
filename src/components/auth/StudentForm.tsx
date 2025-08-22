@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import { AppDispatch, RootState } from '../../redux/store';
 import {Link} from "react-router-dom"
 import { Studentlogin } from '../../redux/slices/auth';
-import { useNavigate } from 'react-router';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required('email is required'),
@@ -13,7 +12,6 @@ const validationSchema = Yup.object().shape({
 const StudentForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { loading } = useSelector((state: RootState) => state.auth);
-  const navigate = useNavigate()
 
 
 const handleSubmit = async (values: { email: string }) => {
@@ -21,7 +19,7 @@ const handleSubmit = async (values: { email: string }) => {
   localStorage.setItem("studentEmail", values.email);
   const resultAction = await dispatch(Studentlogin(values));
   if (Studentlogin.fulfilled.match(resultAction)) {
-    navigate("/verifyotp");
+    window.location.href = '/verifyotp';
   }
 };
 

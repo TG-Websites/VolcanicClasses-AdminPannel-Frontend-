@@ -8,7 +8,7 @@ export interface MediaItem {
   url: string;
   type: string;
   isFeatured: boolean;
-  tags: string[];
+  tags: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -18,7 +18,7 @@ export interface MediaPayload {
   file: File | null;
   type: string;
   isFeatured: boolean;
-  tags: string[];
+  tags: string;
 }
 
 export interface MediaState {
@@ -55,48 +55,26 @@ const handleAxiosError = (err: unknown, defaultMsg: string): string => {
 
 // Upload Media
 export const uploadMedia = createAsyncThunk<
-  string,              // Return type (backend sends message:string)
-  MediaPayload,        // Argument type (payload from frontend)
-  { rejectValue: string }
+  string,               // ✅ return type (response.message)
+  MediaPayload,         // ✅ argument type (payload you pass when dispatching)
+  { rejectValue: string } // ✅ reject type (custom error)
 >(
-  'media/upload',
+  "media/upload",
   async (formData, { rejectWithValue }) => {
     try {
-      // 🧹 Clean tags
-      const cleanedFormData: MediaPayload = {
-        ...formData,
-        tags: formData.tags
-          ? formData.tags.map(tag => tag.trim()).filter(tag => tag.length > 0)
-          : [],
-      };
-
-      // Build FormData for file upload
-      const multipartData = new FormData();
-
-      multipartData.append("title", cleanedFormData.title);
-      multipartData.append("type", cleanedFormData.type);
-      multipartData.append("isFeatured", String(cleanedFormData.isFeatured));
-
-      if (cleanedFormData.file) {
-        multipartData.append("file", cleanedFormData.file);
-      }
-
-      // send tags as JSON string
-      multipartData.append("tags", JSON.stringify(cleanedFormData.tags));
-
-      const response = await axiosInstance.post<{ message: string }>(
-        '/api/media/upload',
-        multipartData,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
+      const response = await axiosInstance.post(
+        "/api/media/upload",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
-
-      return response.data.message;
+      return response.data.message; // ✅ correct return type (string)
     } catch (err: unknown) {
-      return rejectWithValue(handleAxiosError(err, 'Upload failed'));
+      return rejectWithValue(handleAxiosError(err, "Upload failed"));
     }
   }
 );
-
 
 
 // Get All Media (with pagination)
@@ -114,6 +92,7 @@ export const getAllMedia = createAsyncThunk<
         data: MediaItem[];
         pagination: Pagination;
       }>(url);
+      console.log("Hello",response.data)
 
       return {
         data: response.data.data,

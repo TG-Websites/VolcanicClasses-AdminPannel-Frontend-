@@ -7,8 +7,8 @@ import {
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-
 } from "../icons";
+
 import { useSidebar } from "../context/SidebarContext";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
@@ -46,7 +46,7 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Admissions",
-    roles: ["admin", "manager"],
+    roles: ["admin", "manager","telecaller"],
     subItems: [{ name: "Inquiries", path: "/admission/inquiries", pro: false }, { name: "Manual Entry", path: "/admission/manual-entry", pro: false }],
   },
   {
@@ -64,7 +64,7 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Announcement",
-    roles: ["admin"],
+    roles: ["admin", "manager"],
     subItems: [{ name: "Announcements", path: "/announcements", pro: false }, { name: "Create Announcements", path: "/announcements/create", pro: false }],
   },
   {

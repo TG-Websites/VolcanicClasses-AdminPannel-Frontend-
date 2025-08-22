@@ -17,13 +17,14 @@ export interface Inquire {
   phone: number;
   email: string;
   courseInterest: {
-  _id: string;
-  title: string;
-};
+    _id: string;
+    title: string;
+  };
   message: string;
   status: 'pending' | 'approved' | 'rejected' | 'waitlisted';
   createdAt: string;
   updatedAt: string;
+  followUpNotes?:string;
 }
 
 // Admission form payload
@@ -36,20 +37,21 @@ interface AdmissionFormPayload {
   status: 'pending' | 'approved' | 'rejected' | 'waitlisted';
 }
 
+// Pagination interface
+interface Pagination {
+  total: number;
+  page: number;
+  limit: number;
+}
+
 // State interface
 interface AdmissionState {
   loading: boolean;
   success: boolean;
   error: string | null;
   inquiries: Inquire[];
-  pagination: Pagination; 
-  
-}
-
-interface Pagination {
-  total: number;   // total number of courses
-  page: number;    // current page
-  limit: number;   // items per page
+  selectedInquiry: Inquire | null; // ✅ new
+  pagination: Pagination;
 }
 
 // Initial state
@@ -58,61 +60,95 @@ const initialState: AdmissionState = {
   success: false,
   error: null,
   inquiries: [],
+  selectedInquiry: null,
   pagination: { total: 0, page: 1, limit: 10 },
 };
+
+// ======================= THUNKS ==========================
 
 // Create admission inquiry
 export const createAdmissionInquiries = createAsyncThunk<
   void,
   AdmissionFormPayload,
   { rejectValue: string }
->(
-  'admission/submitForm',
-  async (formData, { rejectWithValue }) => {
-    try {
-      await axiosInstance.post('/api/admissions/inquiries', formData);
-    } catch (err) {
-      return rejectWithValue(handleAxiosError(err, 'Submission failed'));
-    }
+>('admission/submitForm', async (formData, { rejectWithValue }) => {
+  try {
+    await axiosInstance.post('/api/admissions/inquiries', formData);
+  } catch (err) {
+    return rejectWithValue(handleAxiosError(err, 'Submission failed'));
   }
-);
+});
 
-// Get all inquiries
 // Get all inquiries
 export const getAllInQuiries = createAsyncThunk<
-  { data: Inquire[]; pagination: Pagination }, // return type
+  { data: Inquire[]; pagination: Pagination },
   string | undefined,
   { rejectValue: string }
->(
-  'admission/getAllInquires',
-  async (query, { rejectWithValue }) => {
-    try {
-      const url = query
-        ? `/api/admissions/inquiries?${query}`
-        : `/api/admissions/inquiries`;
+>('admission/getAllInquires', async (query, { rejectWithValue }) => {
+  try {
+    const url = query
+      ? `/api/admissions/inquiries?${query}`
+      : `/api/admissions/inquiries`;
 
-      const response = await axiosInstance.get<{
-        data: Inquire[];
-        pagination: Pagination;
-      }>(url);
+    const response = await axiosInstance.get<{
+      data: Inquire[];
+      pagination: Pagination;
+    }>(url);
 
-      console.log('Inquiries', response.data);
-      return response.data;
-    } catch (err) {
-      return rejectWithValue(handleAxiosError(err, 'Fetching failed'));
-    }
+    return response.data;
+  } catch (err) {
+    return rejectWithValue(handleAxiosError(err, 'Fetching failed'));
   }
-);
+});
 
+// Get inquiry by ID
+export const getInquiryById = createAsyncThunk<
+  Inquire,
+  string,
+  { rejectValue: string }
+>('admission/getInquiryById', async (id, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.get<{ data: Inquire }>(
+      `/api/admissions/inquiries/${id}`
+    );
+    return response.data.data;
+  } catch (err) {
+    return rejectWithValue(handleAxiosError(err, 'Fetching inquiry failed'));
+  }
+});
 
+// Update inquiry
+interface UpdateInquiryPayload {
+  id: string;
+  updates: Partial<AdmissionFormPayload>;
+}
 
-// Slice
+export const updateInquiry = createAsyncThunk<
+  Inquire,
+  UpdateInquiryPayload,
+  { rejectValue: string }
+>('admission/updateInquiry', async ({ id, updates }, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.put<{ data: Inquire }>(
+      `/api/admissions/inquiries/${id}`,
+      updates
+    );
+    return response.data.data;
+  } catch (err) {
+    return rejectWithValue(handleAxiosError(err, 'Update failed'));
+  }
+});
+
+// ======================= SLICE ==========================
 const admissionSlice = createSlice({
   name: 'admission',
   initialState,
   reducers: {
     resetSuccess(state) {
       state.success = false;
+    },
+    clearSelectedInquiry(state) {
+      state.selectedInquiry = null;
     },
   },
   extraReducers: (builder) => {
@@ -127,10 +163,13 @@ const admissionSlice = createSlice({
         state.loading = false;
         state.success = true;
       })
-      .addCase(createAdmissionInquiries.rejected, (state, action: PayloadAction<string | undefined>) => {
-        state.loading = false;
-        state.error = action.payload || null;
-      })
+      .addCase(
+        createAdmissionInquiries.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.loading = false;
+          state.error = action.payload || null;
+        }
+      )
 
       // Get All Inquiries
       .addCase(getAllInQuiries.pending, (state) => {
@@ -142,12 +181,62 @@ const admissionSlice = createSlice({
         state.inquiries = action.payload.data;
         state.pagination = action.payload.pagination;
       })
-      .addCase(getAllInQuiries.rejected, (state, action: PayloadAction<string | undefined>) => {
+      .addCase(
+        getAllInQuiries.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.loading = false;
+          state.error = action.payload || null;
+        }
+      )
+
+      // Get Inquiry by ID
+      .addCase(getInquiryById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getInquiryById.fulfilled, (state, action) => {
         state.loading = false;
-        state.error = action.payload || null;
-      });
+        state.selectedInquiry = action.payload; // ✅ store in selectedInquiry
+      })
+      .addCase(
+        getInquiryById.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.loading = false;
+          state.error = action.payload || null;
+        }
+      )
+
+      // Update Inquiry
+      .addCase(updateInquiry.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateInquiry.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+
+        // ✅ update inquiries list
+        const index = state.inquiries.findIndex(
+          (inq) => inq._id === action.payload._id
+        );
+        if (index !== -1) {
+          state.inquiries[index] = action.payload;
+        }
+
+        // ✅ update selected inquiry if it's the same one
+        if (state.selectedInquiry?._id === action.payload._id) {
+          state.selectedInquiry = action.payload;
+        }
+      })
+      .addCase(
+        updateInquiry.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.loading = false;
+          state.error = action.payload || null;
+        }
+      );
   },
 });
 
-export const { resetSuccess } = admissionSlice.actions;
+export const { resetSuccess, clearSelectedInquiry } = admissionSlice.actions;
 export default admissionSlice.reducer;

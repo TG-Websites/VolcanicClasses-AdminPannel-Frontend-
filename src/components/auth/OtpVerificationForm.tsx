@@ -31,7 +31,7 @@ const handleSubmit = async (values: { otp: string }) => {
   );
 
   if (verifyOtp.fulfilled.match(resultAction)) {
-    window.location.href = "/studentDashboard";
+    window.location.href = "/";
   }
 };
 

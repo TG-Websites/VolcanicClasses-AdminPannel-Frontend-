@@ -38,7 +38,6 @@ export interface AuthState {
   user: User | null;
   isLogin: boolean;
   isStudentLogin: boolean;
-  optverify: boolean,
 }
 
 const initialState: AuthState = {
@@ -50,7 +49,6 @@ const initialState: AuthState = {
   user: null,
   isLogin: false,
   isStudentLogin: false,
-  optverify: false,
 };
 
 // ✅ Reusable error handler
@@ -91,7 +89,7 @@ export const Studentlogin = createAsyncThunk<
 );
 
 export const verifyOtp = createAsyncThunk<
-  { token: string; email: string },
+  { token: string; email: string ;user:User},
   VerifyOtpPayload,
   { rejectValue: string }
 >('auth/verifyStudentOtp', async (data, { rejectWithValue }) => {
@@ -158,7 +156,7 @@ export const authSlice = createSlice({
         state.email = action.payload.email;
         state.isLogin = true;
         state.isStudentLogin = false; 
-        state.loading = false;
+
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -173,7 +171,6 @@ export const authSlice = createSlice({
       .addCase(Studentlogin.fulfilled, (state) => {
         state.loading = false;
         state.isLogin = true;
-        state.isStudentLogin = true;
       })
       .addCase(Studentlogin.rejected, (state, action) => {
         state.loading = false;
@@ -185,12 +182,11 @@ export const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(verifyOtp.fulfilled, (state, action: PayloadAction<{ token: string; email: string }>) => {
-        state.loading = false;
+      .addCase(verifyOtp.fulfilled, (state, action: PayloadAction<{ token: string; email: string ;user:User}>) => {
         state.token = action.payload.token;
         state.email = action.payload.email;
-        state.isLogin = true;
-        state.isStudentLogin = true;
+        state.user = action.payload.user;
+        state.isStudentLogin=true;
       })
       .addCase(verifyOtp.rejected, (state, action) => {
         state.loading = false;
@@ -204,10 +200,9 @@ export const authSlice = createSlice({
       })
     .addCase(gotme.fulfilled, (state, action: PayloadAction<User>) => {
       state.user = action.payload;
+      state.isStudentLogin = true;
       state.isLogin = true;
       state.loading = false;
-      state.isStudentLogin = true;
-      state.optverify=true;
     })
     .addCase(gotme.rejected, (state) => {
       state.isLogin = false;

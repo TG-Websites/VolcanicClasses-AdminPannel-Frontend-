@@ -142,16 +142,20 @@ const AllMedia = () => {
               <div className="p-3 text-gray-900 dark:text-white">
                 <p className="font-medium truncate">{media.title}</p>
                 <div className="flex flex-wrap gap-1 mt-2">
-                  {media.tags?.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="text-xs bg-blue-100 dark:bg-brand-500 text-black dark:text-blue-200 px-2 py-1 rounded-full"
-                    >
-                      #{tag.trim()}
-                    </span>
-                  ))}
+                  {media.tags &&
+                    media.tags
+                      .split(",") // 👈 convert string -> array
+                      .map((tag, index) => (
+                        <span
+                          key={index}
+                          className="text-xs bg-blue-100 dark:bg-brand-500 text-black dark:text-blue-200 px-2 py-1 rounded-full"
+                        >
+                          #{tag.trim()}
+                        </span>
+                      ))}
                 </div>
               </div>
+
             </div>
           ))}
         </div>

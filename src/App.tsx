@@ -36,19 +36,19 @@ import PaymentDetail from "./pages/payments/Payment/PaymentDetail";
 import Loader from "./utils/Loader";
 import Verifyotp from "./pages/AuthPages/Verifyotp";
 import StudentSignIn from "./pages/AuthPages/StudentSignIn";
-import StudentDashboard from "./pages/studentDashboard/StudentDashboard";
 import "react-datepicker/dist/react-datepicker.css";
+import EditInquiries from "./pages/admission/EditInquiries.tsx/EditInquiries";
 
 
 export default function App() {
-  const { isLogin, loading, isStudentLogin, optverify } = useSelector((state: RootState) => state.auth);
+  const { isLogin, loading, isStudentLogin } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     dispatch(gotme())
   }, [dispatch]);
 
-  if (loading && !isLogin) return <Loader /> ;
+  if (loading ) return <Loader /> ;
 
   return (
     <Router>
@@ -61,12 +61,12 @@ export default function App() {
         />
         <Route
           path="/verifyotp"
-          element={optverify ? <Navigate to="/studentDashboard" /> : <Verifyotp />}
+          element={isStudentLogin ? <Navigate to="/" /> : <Verifyotp />}
         />
         <Route
           path="/studentsignin"
           element={
-            isStudentLogin && !optverify ? <Navigate to="/verifyotp" /> : <StudentSignIn />
+            isLogin  ? <Navigate to="/verifyotp" /> : <StudentSignIn />
           }
         />
 
@@ -80,20 +80,12 @@ export default function App() {
           {/* Accessible to all authenticated users */}
           <Route index path="/"
             element={
-              <ProtectedRoute allowedRoles={["admin", "manager", "telecaller"]}>
+              <ProtectedRoute allowedRoles={["admin", "manager", "telecaller","user"]}>
                 <Home />
               </ProtectedRoute>
             }
           />
 
-          <Route
-            path="/studentDashboard"
-            element={
-              <ProtectedRoute allowedRoles={["user"]}>
-                <StudentDashboard />
-              </ProtectedRoute>
-            }
-          />
           <Route path="/profile" element={<Profile />} />
 
           {/* Only admin or instructor can add/edit courses */}
@@ -128,15 +120,23 @@ export default function App() {
           <Route
             path="/admission/inquiries"
             element={
-              <ProtectedRoute allowedRoles={["admin", "manager"]}>
+              <ProtectedRoute allowedRoles={["admin", "manager","telecaller"]}>
                 <Inquiries />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admission/inquiries/:id"
+            element={
+              <ProtectedRoute allowedRoles={["admin", "manager","telecaller"]}>
+                <EditInquiries />
               </ProtectedRoute>
             }
           />
           <Route
             path="/admission/manual-entry"
             element={
-              <ProtectedRoute allowedRoles={["admin", "manager"]}>
+              <ProtectedRoute allowedRoles={["admin", "manager","telecaller"]}>
                 <Manual_Entry />
               </ProtectedRoute>
             }
@@ -159,9 +159,9 @@ export default function App() {
           <Route path="/live-classes/edit/:id" element={<ProtectedRoute allowedRoles={["admin", "manager"]}><EditClass /></ProtectedRoute>} />
 
           {/* Announcements */}
-          <Route path="/announcements" element={<ProtectedRoute allowedRoles={["admin"]}><Announcements /></ProtectedRoute>} />
-          <Route path="/announcements/create" element={<ProtectedRoute allowedRoles={["admin"]}><CreateAnnouncements /></ProtectedRoute>} />
-          <Route path="/announcements/edit/:id" element={<ProtectedRoute allowedRoles={["admin"]}><EditAnnouncements /></ProtectedRoute>} />
+          <Route path="/announcements" element={<ProtectedRoute allowedRoles={["admin", "manager"]}><Announcements /></ProtectedRoute>} />
+          <Route path="/announcements/create" element={<ProtectedRoute allowedRoles={["admin", "manager"]}><CreateAnnouncements /></ProtectedRoute>} />
+          <Route path="/announcements/edit/:id" element={<ProtectedRoute allowedRoles={["admin", "manager"]}><EditAnnouncements /></ProtectedRoute>} />
 
           {/* Admin-only user management */}
           <Route

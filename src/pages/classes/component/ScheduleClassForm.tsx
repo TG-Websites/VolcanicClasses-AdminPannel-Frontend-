@@ -17,7 +17,7 @@ interface ScheduleClassFormProps {
 
 const validationSchema = Yup.object().shape({
   course: Yup.string().required('Course ID is required'),
-  instructor: Yup.string().required('Instructor ID is required'),
+  instructor: Yup.string().required('Instructor is required'),
   date: Yup.date().required('Date is required'),
   time: Yup.string().required('Time is required'),
   mode: Yup.string().oneOf(['online', 'offline']).required('Mode is required'),
@@ -49,13 +49,13 @@ const ScheduleClassForm: React.FC<ScheduleClassFormProps> = ({
               <ErrorMessage name="course" component="div" className="text-red-500 text-sm mt-1" />
             </div>
 
-            {/* Instructor ID */}
+            {/* Instructor Name*/}
             <div className="col-span-1">
               <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Instructor Name</label>
               <Field
                 name="instructor"
                 className="mt-1 block w-full border border-gray-300 dark:border-gray-600 outline-none dark:bg-gray-700 rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
-                placeholder="Enter Instructor ID"
+                placeholder="Enter Instructor Name"
               />
               <ErrorMessage name="instructor" component="div" className="text-red-500 text-sm mt-1" />
             </div>

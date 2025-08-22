@@ -221,17 +221,20 @@ const MediaUpload = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
+        const payload = {
+          ...values,
+          tags: values.tags.filter(tag => tag.trim() !== "").join(",") // convert array → string
+        };
 
-        const response = await dispatch(uploadMedia(values))
-        if(uploadMedia.fulfilled.match(response)){
+        const response = await dispatch(uploadMedia(payload));
+        if (uploadMedia.fulfilled.match(response)) {
           toast.success("Media Upload Successfully");
-          navigate("/allmedia")
+          navigate("/allmedia");
         }
       } finally {
         setSubmitting(false);
       }
     }
-
   })
 
 
@@ -241,7 +244,7 @@ const MediaUpload = () => {
       className="space-y-4 bg-white dark:bg-gray-800 px-4 py-5 rounded-xl shadow-sm dark:text-gray-200"
     >
       <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">
-        Upload Media 
+        Upload Media
       </h1>
       {/* Title */}
       <div>

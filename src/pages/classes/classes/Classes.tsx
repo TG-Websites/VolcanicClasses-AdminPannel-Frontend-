@@ -227,7 +227,7 @@ const Classes: React.FC = () => {
 
                     <div className="mb-2 sm:mb-4">
                       <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
-                        <span className="text-xs sm:text-sm">Course: </span>
+                        <span className="text-lg sm:text-lg">Course: </span>
                         {typeof cls.course === 'object' && cls.course !== null ? cls.course.title : 'Untitled'}
                       </h4>
                       <div className="mt-1 sm:mt-2 space-y-0.5 sm:space-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
