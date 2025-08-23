@@ -1,11 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
+import { LiaUsersCogSolid } from "react-icons/lia";
+import { RiBookShelfLine } from "react-icons/ri";
+import { MdOutlinePermMedia } from "react-icons/md";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBullhorn, faCartShopping, faChartLine, faCreditCard, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
+import { MdOutlineLiveTv } from "react-icons/md";
+
 
 // Assume these icons are imported from an icon library
 import {
 
   ChevronDownIcon,
-  GridIcon,
   HorizontaLDots,
 } from "../icons";
 
@@ -26,61 +32,61 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
-    icon: <GridIcon />,
+    icon: <FontAwesomeIcon icon={faChartLine} />,
     name: "Dashboard",
     roles: ["admin", "manager", "telecaller"],
     subItems: [{ name: "Dashboard", path: "/", pro: false }],
   },
     {
-    icon: <GridIcon />,
+    icon: <FontAwesomeIcon icon={faChartLine} />,
     name: "Dashboard",
     roles: ["user"],
     subItems: [{ name: "Dashboard", path: "/studentDashboard", pro: false }],
   },
   {
-    icon: <GridIcon />,
+    icon: <RiBookShelfLine />,
     name: "Courses",
     roles: ["admin", "manager"],
     subItems: [{ name: "Add Course", path: "/course/add", pro: false }, { name: "All Course", path: "/course/list", pro: false }],
   },
   {
-    icon: <GridIcon />,
+    icon:  <FontAwesomeIcon icon={faGraduationCap} size="2x" />,
     name: "Admissions",
     roles: ["admin", "manager","telecaller"],
     subItems: [{ name: "Inquiries", path: "/admission/inquiries", pro: false }, { name: "Manual Entry", path: "/admission/manual-entry", pro: false }],
   },
   {
-    icon: <GridIcon />,
+    icon: <MdOutlinePermMedia />,
     name: "Media Library",
     roles: ["admin", "manager"],
     subItems: [{ name: "All Media", path: "/allmedia", pro: false }, { name: "Upload Media", path: "/uploadmedia", pro: false }],
   },
   {
-    icon: <GridIcon />,
+    icon: <MdOutlineLiveTv />,
     name: "Live Classes",
     roles: ["admin", "manager"],
     subItems: [{ name: "Calendar View", path: "/live-classes/calendar", pro: false }, { name: "Schedule Class", path: "/live-classes/create", pro: false }],
   },
   {
-    icon: <GridIcon />,
+    icon: <FontAwesomeIcon icon={faBullhorn} />,
     name: "Announcement",
     roles: ["admin", "manager"],
     subItems: [{ name: "Announcements", path: "/announcements", pro: false }, { name: "Create Announcements", path: "/announcements/create", pro: false }],
   },
   {
-    icon: <GridIcon />,
+    icon: <LiaUsersCogSolid />,
     name: "Users & Roles",
     roles: ["admin"],
     subItems: [{ name: "User List", path: "/admin/users", pro: false }, { name: "Create New User", path: "/admin/users/create", pro: false }],
   },
   {
-    icon: <GridIcon />,
+    icon: <FontAwesomeIcon icon={faCartShopping} />,
     name: "Orders",
     roles: ["admin"],
     subItems: [{ name: "Orders", path: "/orders", pro: false }],
   },
   {
-    icon: <GridIcon />,
+    icon: <FontAwesomeIcon icon={faCreditCard} />,
     name: "Payments",
     roles: ["admin"],
     subItems: [{ name: "Payments", path: "/payments", pro: false }],
