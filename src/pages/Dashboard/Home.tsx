@@ -50,7 +50,7 @@ export default function Home() {
 
         </div>
 
-        {(user?.role === "telecaller" || user?.role === "admin" || user?.role === "manager") && (
+        {(  user?.role === "admin" || user?.role === "manager") && (
           <div className="col-span-12 xl:col-span-5">
             <AnnouncementSection />
           </div>

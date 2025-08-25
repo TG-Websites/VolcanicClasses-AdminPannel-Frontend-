@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../../../redux/store';
-import { deleteClass, getAllClasses } from '../../../redux/slices/liveClass';
+import { cancelClass, deleteClass, getAllClasses } from '../../../redux/slices/liveClass';
+import { LiaChalkboardTeacherSolid } from "react-icons/lia";
+
 
 import {
   ChevronLeft,
@@ -83,14 +85,23 @@ const Classes: React.FC = () => {
     navigate(`/live-classes/edit/${cls}`)
   }
 
-  const handleDelete = async (clsId: string) => {
-    const resultAction = await dispatch(deleteClass(clsId));
+  const handleDelete = async (id: string) => {
+    if (window.confirm("Are you sure you want to delete the Class?")) {
+      const resultAction = await dispatch(deleteClass(id));
+      if (deleteClass.fulfilled.match(resultAction)) {
+        toast.success("Media Delete Successfully")
+        dispatch(getAllClasses());
+      }
+    }
+  };
 
-    if (deleteClass.fulfilled.match(resultAction)) {
-      toast.success("Class Schedule Delete Successfully")
-      dispatch(getAllClasses());
-    } else {
-      console.error('Failed to delete class:', resultAction.payload);
+  const handleCancel = async (id: string) => {
+    if (window.confirm("Are you sure you want to cancel the Class?")) {
+      const resultAction = await dispatch(cancelClass(id));
+      if (cancelClass.fulfilled.match(resultAction)) {
+        toast.success("Media cancel Successfully")
+        dispatch(getAllClasses());
+      }
     }
   };
 
@@ -232,6 +243,11 @@ const Classes: React.FC = () => {
                       </h4>
                       <div className="mt-1 sm:mt-2 space-y-0.5 sm:space-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                         <div className="flex items-center">
+                          <LiaChalkboardTeacherSolid className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400" />
+                          <span className="text-gray-900 dark:text-white font-medium mr-0.5 sm:mr-1">instructor:</span>
+                          {cls.instructor}
+                        </div>
+                        <div className="flex items-center">
                           <ClockIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400" />
                           <span className="text-gray-900 dark:text-white font-medium mr-0.5 sm:mr-1">Time:</span>
                           {cls.time}
@@ -251,11 +267,14 @@ const Classes: React.FC = () => {
                         >
                           Edit
                         </button>
-                        <button
-                          className="px-2 py-1 sm:px-3 sm:py-1.5 text-xs bg-red-100 text-red-600 rounded-full font-medium hover:bg-red-200 dark:bg-red-900 dark:text-red-400 dark:hover:bg-red-800 transition"
-                        >
-                          Cancel
-                        </button>
+                        {
+                          cls.isCancelled ? <></> : <button
+                            className="px-2 py-1 sm:px-3 sm:py-1.5 text-xs bg-red-100 text-red-600 rounded-full font-medium hover:bg-red-200 dark:bg-red-900 dark:text-red-400 dark:hover:bg-red-800 transition"
+                            onClick={() => handleCancel(cls._id)}
+                          >
+                            Cancel
+                          </button>
+                        }
                       </div>
                     </div>
                   </div>

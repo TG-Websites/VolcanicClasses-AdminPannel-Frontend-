@@ -9,6 +9,7 @@ interface Course {
   slug: string;
   category: string;
   bannerImageUrl: string;
+
 }
 
 export interface ClassItem {
@@ -30,7 +31,6 @@ export interface ClassPayload {
   time: string;
   mode: 'online' | 'offline' | 'hybrid';
   link: string;
-  isCancelled: boolean;
 }
 
 export interface ClassState {
@@ -122,6 +122,24 @@ export const deleteClass = createAsyncThunk<string, string, { rejectValue: strin
   }
 );
 
+// Cancel Class
+export const cancelClass = createAsyncThunk<
+  ClassItem,
+  string,
+  { rejectValue: string }
+>(
+  'liveClass/cancel',
+  async (classId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.patch(`/api/schedules/${classId}/cancel`);
+      return response.data.data as ClassItem;
+    } catch (err: unknown) {
+      return rejectWithValue(handleAxiosError(err, 'Failed to cancel class'));
+    }
+  }
+);
+
+
 // Slice
 const classSlice = createSlice({
   name: 'liveClass',
@@ -195,7 +213,7 @@ const classSlice = createSlice({
           state.classes[index] = action.payload;
         }
 
-        if (state.selectedClass?. _id === action.payload._id) {
+        if (state.selectedClass?._id === action.payload._id) {
           state.selectedClass = action.payload;
         }
       })
@@ -218,6 +236,20 @@ const classSlice = createSlice({
       .addCase(deleteClass.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? null;
+      })
+      .addCase(cancelClass.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(cancelClass.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(cancelClass.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? null;
+        state.success = false;
       });
   },
 });

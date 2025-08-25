@@ -41,7 +41,7 @@ const navItems: NavItem[] = [
     icon: <FontAwesomeIcon icon={faChartLine} />,
     name: "Dashboard",
     roles: ["user"],
-    subItems: [{ name: "Dashboard", path: "/studentDashboard", pro: false }],
+    subItems: [{ name: "Student Dashboard", path: "/", pro: false }],
   },
   {
     icon: <RiBookShelfLine />,

@@ -3,7 +3,6 @@ import { fetchStudentDashboard } from "../../redux/slices/studentDashboard";
 import { getCourseById } from "../../redux/slices/course";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { useNavigate } from "react-router";
 import { FaBullhorn } from "react-icons/fa";
 
 interface Course {
@@ -24,7 +23,6 @@ const StudentDashboard: React.FC = () => {
     (state: RootState) => state.studentDashboard
   );
   const [courses, setCourses] = useState<Course[]>([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchStudentDashboard());
@@ -133,8 +131,7 @@ const StudentDashboard: React.FC = () => {
                       <img
                         src={course.bannerImageUrl}
                         alt={course.title}
-                        className="w-16 h-16 object-cover rounded cursor-pointer"
-                        onClick={() => navigate(`/course/${course._id}`)}
+                        className="w-16 h-16 object-cover rounded "
                       />
                     </td>
                     <td className="px-6 py-4 text-gray-800 dark:text-gray-100">

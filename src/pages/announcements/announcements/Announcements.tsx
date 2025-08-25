@@ -50,7 +50,7 @@ const Announcements = () => {
     };
 
     const handleDelete = async (id: string) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this course?");
+        const confirmDelete = window.confirm("Are you sure you want to delete this announcement?");
         if (confirmDelete) {
             const resultAction = await dispatch(deleteAnnouncement(id));
             if (deleteAnnouncement.fulfilled.match(resultAction)) {

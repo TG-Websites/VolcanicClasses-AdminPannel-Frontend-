@@ -21,6 +21,7 @@ export interface Inquiry {
   };
   message: string;
   createdAt: string;
+  status: string;
 }
 
 interface InquiryListProps {
@@ -38,7 +39,7 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
   const navigate = useNavigate();
 
 
-   const handleEdit = (id: string) => {
+  const handleEdit = (id: string) => {
     navigate(`/admission/inquiries/${id}`);
   };
 
@@ -107,6 +108,17 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
                     <span className="font-medium">Course:</span>{" "}
                     {inquiry.courseInterest.title}
                   </div>
+                  <div
+                    className={`flex items-center justify-center gap-2 px-3 w-fit  rounded-full text-white text-sm font-medium
+                      ${inquiry.status === "pending" ? "bg-brand-500" : ""}
+                      ${inquiry.status === "approved" ? "bg-green-400" : ""}
+                      ${inquiry.status === "rejected" ? "bg-red-500" : ""}
+                      ${inquiry.status === "waitlisted" ? "bg-blue-500" : ""}
+                  `}
+                  >
+                    {inquiry.status}
+                  </div>
+
                   <div>
                     <span className="font-medium">Message:</span>{" "}
                     <span className="text-gray-600 dark:text-gray-400">

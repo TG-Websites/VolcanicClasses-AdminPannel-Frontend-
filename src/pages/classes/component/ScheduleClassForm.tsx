@@ -22,7 +22,6 @@ const validationSchema = Yup.object().shape({
   time: Yup.string().required('Time is required'),
   mode: Yup.string().oneOf(['online', 'offline']).required('Mode is required'),
   link: Yup.string().url('Must be a valid URL').required('Link is required'),
-  isCancelled: Yup.boolean(),
 });
 
 const ScheduleClassForm: React.FC<ScheduleClassFormProps> = ({
@@ -126,11 +125,6 @@ const ScheduleClassForm: React.FC<ScheduleClassFormProps> = ({
               <ErrorMessage name="link" component="div" className="text-red-500 text-sm mt-1" />
             </div>
 
-            {/* Is Cancelled */}
-            <div className="col-span-1 flex items-center space-x-2 mt-1">
-              <Field type="checkbox" name="isCancelled" className="accent-brand-500" />
-              <label className="text-sm text-gray-700 dark:text-gray-300 ">Is this session cancelled?</label>
-            </div>
 
             {/* Submit Button - Full width on small, half on medium+ */}
             <div className="col-span-full">

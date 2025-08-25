@@ -7,7 +7,6 @@ export interface MediaItem {
   title: string;
   url: string;
   type: string;
-  isFeatured: boolean;
   tags: string;
   createdAt: string;
   updatedAt: string;
@@ -17,7 +16,6 @@ export interface MediaPayload {
   title: string;
   file: File | null;
   type: string;
-  isFeatured: boolean;
   tags: string;
 }
 

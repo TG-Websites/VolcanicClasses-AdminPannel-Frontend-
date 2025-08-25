@@ -4,6 +4,10 @@ import course from "../../Assets/courses.png";
 import { PiStudentDuotone } from "react-icons/pi";
 import { useNavigate } from "react-router";
 import type { AdminDashboardData } from "./type";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { useEffect } from "react";
+import { getAllUsers } from "../../redux/slices/users";
 
 interface EcommerceMetricsProps {
   data: AdminDashboardData | null;
@@ -11,6 +15,18 @@ interface EcommerceMetricsProps {
 
 export default function EcommerceMetrics({ data }: EcommerceMetricsProps) {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
+  // ✅ Grab all users from users slice
+  const { users } = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, [dispatch]);
+
+  // ✅ Count only users with role === "user"
+  const userCount = users?.filter((u) => u.role === "user").length || 0;
+
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
@@ -51,7 +67,7 @@ export default function EcommerceMetrics({ data }: EcommerceMetricsProps) {
               Total Students
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              5,359
+              {userCount}
             </h4>
           </div>
           <Badge>

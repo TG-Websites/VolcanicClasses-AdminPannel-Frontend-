@@ -207,7 +207,6 @@ const MediaUpload = () => {
       title: '',
       file: null,
       type: 'image',
-      isFeatured: false,
       tags: [],
     },
     validationSchema: Yup.object({
@@ -307,22 +306,6 @@ const MediaUpload = () => {
         {formik.touched.type && formik.errors.type && (
           <div className="text-red-500 dark:text-red-400 text-xs mt-1">{formik.errors.type}</div>
         )}
-      </div>
-
-      {/* Featured */}
-      <div className="flex items-center">
-        <input
-          id="isFeatured"
-          name="isFeatured"
-          type="checkbox"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          checked={formik.values.isFeatured}
-          className="h-4 w-4 rounded border-gray-300 dark:border-gray-600  dark:bg-gray-700 focus-2 focus:ring-brand-500"
-        />
-        <label htmlFor="isFeatured" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-          Featured Media
-        </label>
       </div>
 
       {/* Tags */}

@@ -12,7 +12,7 @@ const AllOrders = () => {
   const navigate = useNavigate();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [limit] = useState(3); // fixed page size
+  const [limit] = useState(10); // fixed page size
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState<{ paymentStatus?: string; course?: string;startDate?: string;endDate?: string; }>({});
 
