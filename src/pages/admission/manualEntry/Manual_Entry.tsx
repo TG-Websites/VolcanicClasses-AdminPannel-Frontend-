@@ -159,9 +159,9 @@ const AdmissionForm: React.FC = () => {
             value={formik.values.status}
           >
             <option value={AdmissionStatus.pending}>Pending</option>
-            <option value={AdmissionStatus.approved}>Approved</option>
-            <option value={AdmissionStatus.rejected}>Rejected</option>
-            <option value={AdmissionStatus.waitlisted}>Waitlisted</option>
+            <option value={AdmissionStatus.contacted}>Contacted</option>
+            <option value={AdmissionStatus.converted}>Converted</option>
+            <option value={AdmissionStatus.lost}>Lost</option>
           </select>
         </div>
 

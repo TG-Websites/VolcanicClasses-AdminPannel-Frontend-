@@ -17,6 +17,7 @@ import { AdmissionStatus } from '../manualEntry/types';
 import { useNavigate, useParams } from 'react-router';
 import CourseDropdown from '../components/CourseDropdown';
 import toast from 'react-hot-toast';
+import { FaUser } from 'react-icons/fa';
 
 const EditInquiries: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -45,7 +46,7 @@ const EditInquiries: React.FC = () => {
                     ? selectedInquiry.courseInterest._id
                     : selectedInquiry?.courseInterest || '',
             message: selectedInquiry?.message || '',
-            followUpNotes: selectedInquiry?.followUpNotes || '', // ✅ optional
+            followUpNote: selectedInquiry?.followUpNote || '', // ✅ optional
             status: selectedInquiry?.status || AdmissionStatus.pending,
         },
         validationSchema: Yup.object({
@@ -54,7 +55,7 @@ const EditInquiries: React.FC = () => {
             email: Yup.string().email('Invalid email').required('Email is required'),
             courseInterest: Yup.string().required('Course Interest is required'),
             message: Yup.string(),
-            followUpNotes: Yup.string(), // ✅ optional
+            followUpNote: Yup.string(), // ✅ optional
             status: Yup.mixed<AdmissionStatus>().oneOf(Object.values(AdmissionStatus)),
         }),
         onSubmit: async (values) => {
@@ -176,15 +177,17 @@ const EditInquiries: React.FC = () => {
                 </div>
 
                 {/* Follow-up Notes */}
+
+
                 <div>
                     <LabelWithIcon icon={MdNoteAdd} text="Follow-up Notes (Optional)" />
                     <textarea
-                        name="followUpNotes"
+                        name="followUpNote"
                         placeholder="Add follow-up notes..."
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500 dark:focus:ring-brand-500 dark:bg-gray-700 dark:text-white"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.followUpNotes}
+                        value={formik.values.followUpNote}
                     />
                 </div>
 
@@ -199,9 +202,9 @@ const EditInquiries: React.FC = () => {
                         value={formik.values.status}
                     >
                         <option value={AdmissionStatus.pending}>Pending</option>
-                        <option value={AdmissionStatus.approved}>Approved</option>
-                        <option value={AdmissionStatus.rejected}>Rejected</option>
-                        <option value={AdmissionStatus.waitlisted}>Waitlisted</option>
+                        <option value={AdmissionStatus.contacted}>Contacted</option>
+                        <option value={AdmissionStatus.converted}>Converted</option>
+                        <option value={AdmissionStatus.lost}>Lost</option>
                     </select>
                 </div>
 
@@ -212,6 +215,43 @@ const EditInquiries: React.FC = () => {
                     Update Inquiry
                 </button>
             </form>
+            <div>
+                {selectedInquiry?.followUps && selectedInquiry.followUps.length > 0 && (
+                    <div>
+                        <LabelWithIcon icon={MdNoteAdd} text="Previous Follow-ups" />
+                        <div className="space-y-4 mt-4">
+                            {(selectedInquiry.followUps ?? []).map((note) => (
+                                <div key={note._id} className="flex gap-3">
+                                    {/* Avatar */}
+                                    <div className="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-brand-100 dark:bg-brand-500 rounded-full">
+                                        <FaUser className="text-brand-500 dark:text-white" />
+                                    </div>
+
+                                    {/* Comment Content */}
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-medium text-gray-900 dark:text-gray-100">
+                                                {note.addedBy.name}
+                                            </span>
+                                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                {new Date(note.date).toLocaleDateString("en-GB", {
+                                                    day: "2-digit",
+                                                    month: "short",
+                                                    year: "numeric",
+                                                })}
+                                            </span>
+                                        </div>
+
+                                        <p className="text-gray-800 dark:text-gray-200 text-sm mt-1">
+                                            {note.note}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

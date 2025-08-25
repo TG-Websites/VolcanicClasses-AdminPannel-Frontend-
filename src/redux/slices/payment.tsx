@@ -83,9 +83,10 @@ export const getPaymentById = createAsyncThunk<
   { rejectValue: string }
 >(
   'payments/getById',
-  async (id, { rejectWithValue }) => {
+  async (id:string, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.get<{ data: Payment }>(`/api/payments/${id}`);
+      console.log(res.data)
       return res.data.data;
     } catch (err: unknown) {
       return rejectWithValue(handleAxiosError(err, 'Fetch failed'));

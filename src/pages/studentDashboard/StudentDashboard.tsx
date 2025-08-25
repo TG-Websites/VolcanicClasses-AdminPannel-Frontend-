@@ -1,46 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { fetchStudentDashboard } from "../../redux/slices/studentDashboard";
-import { getCourseById } from "../../redux/slices/course";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { FaBullhorn } from "react-icons/fa";
 
-interface Course {
-  _id: string;
-  title: string;
-  programs: Array<{
-    mode: string;
-    price: number;
-  }>;
-  bannerImageUrl: string;
-  category: string;
-  duration: string;
-}
 
 const StudentDashboard: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { loading, data, error } = useSelector(
     (state: RootState) => state.studentDashboard
   );
-  const [courses, setCourses] = useState<Course[]>([]);
 
   useEffect(() => {
     dispatch(fetchStudentDashboard());
   }, [dispatch]);
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      if (data?.purchasedCourses) {
-        const courseDetails: Course[] = [];
-        for (const purchased of data.purchasedCourses) {
-          const res = await dispatch(getCourseById(purchased._id));
-          courseDetails.push(res.payload);
-        }
-        setCourses(courseDetails);
-      }
-    };
-    fetchCourses();
-  }, [data, dispatch]);
 
   if (loading) {
     return (
@@ -84,7 +58,7 @@ const StudentDashboard: React.FC = () => {
     );
   }
 
-  const { announcements } = data;
+  const { announcements, purchasedCourses } = data;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10">
@@ -100,7 +74,7 @@ const StudentDashboard: React.FC = () => {
         </header>
 
         {/* Purchased Courses Table */}
-        {courses.length > 0 && (
+        {purchasedCourses.length > 0 && (
           <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow-md">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-100 dark:bg-gray-700">
@@ -112,18 +86,18 @@ const StudentDashboard: React.FC = () => {
                     Title
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Category
+                    Mode
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Duration
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Price
+                    PriceLabel
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {courses.map((course) => (
+                {purchasedCourses.map((course) => (
                   <tr
                     key={course._id}
                   >
@@ -138,10 +112,18 @@ const StudentDashboard: React.FC = () => {
                       {course.title}
                     </td>
                     <td className="px-6 py-4 text-gray-800 dark:text-gray-100">
-                      {course.category}
+                      {course.programs?.map((program, i) => (
+                        <span key={i}>
+                          {program.mode}
+                        </span>
+                      ))}
                     </td>
                     <td className="px-6 py-4 text-gray-800 dark:text-gray-100">
-                      {course.duration}
+                       {course.programs?.map((program, i) => (
+                        <span key={i}>
+                          {program.priceLabel}
+                        </span>
+                      ))}
                     </td>
                     <td className="px-6 py-4 text-gray-800 dark:text-gray-100">
                       ₹{course.programs[0]?.price?.toFixed(2) ?? "N/A"}
@@ -258,8 +240,8 @@ const StudentDashboard: React.FC = () => {
                         <td className="px-6 py-4">
                           <span
                             className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${s.isCancelled
-                                ? "bg-red-100 text-red-800"
-                                : "bg-green-100 text-green-800"
+                              ? "bg-red-100 text-red-800"
+                              : "bg-green-100 text-green-800"
                               }`}
                           >
                             {s.isCancelled ? "Cancelled" : "Scheduled"}

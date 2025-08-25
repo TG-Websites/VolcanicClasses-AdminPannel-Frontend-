@@ -6,6 +6,7 @@ import FilterDropdown from "../components/FilterDropdown";
 import Pagination from "../../../utils/Pagination";
 import { FaSearch } from "react-icons/fa";
 import { IoReload } from "react-icons/io5";
+// import { useNavigate } from "react-router";
 
 const AllPayments = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -73,6 +74,11 @@ const AllPayments = () => {
         fetchPayments(1, {}, "");
     };
 
+    // const navigate = useNavigate();
+  //   const clickHandler = (id: string) => {
+  //   navigate(`/payment/${id}`);
+  // };
+
   return (
     <div className="p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -131,6 +137,7 @@ const AllPayments = () => {
             <tbody>
               {payments.map((payment) => (
                 <tr
+                // onClick={() => clickHandler(payment._id)}
                   key={payment._id}
                   className="border-t dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors"
                 >

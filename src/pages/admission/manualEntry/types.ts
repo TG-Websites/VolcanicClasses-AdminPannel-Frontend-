@@ -1,8 +1,8 @@
 export enum AdmissionStatus {
   pending = 'pending',
-  approved = 'approved',
-  rejected = 'rejected',
-  waitlisted = 'waitlisted',
+  contacted = 'contacted',    
+  converted = 'converted',
+  lost = 'lost',
 }
 
 export interface AdmissionFormValues {

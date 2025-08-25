@@ -21,10 +21,21 @@ export interface Inquire {
     title: string;
   };
   message: string;
-  status: 'pending' | 'approved' | 'rejected' | 'waitlisted';
+  status: 'pending'| 'contacted' | 'converted' | 'lost';
   createdAt: string;
   updatedAt: string;
-  followUpNotes?:string;
+  followUpNote?:string;
+  followUps?: FollowUp[];
+}
+
+export interface FollowUp {
+  _id: string;
+  note: string;
+  addedBy: {
+    _id: string;
+    name: string;
+  };
+  date: string; // ISO date string
 }
 
 // Admission form payload
@@ -34,7 +45,7 @@ interface AdmissionFormPayload {
   email: string;
   courseInterest: string;
   message: string;
-  status: 'pending' | 'approved' | 'rejected' | 'waitlisted';
+  status: 'pending'| 'contacted' | 'converted' | 'lost';
 }
 
 // Pagination interface

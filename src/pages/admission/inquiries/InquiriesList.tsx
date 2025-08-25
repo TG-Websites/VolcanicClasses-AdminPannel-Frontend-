@@ -22,51 +22,54 @@ export interface Inquiry {
   message: string;
   createdAt: string;
   status: string;
+  followUps?: FollowUp[];
+}
+interface FollowUp {
+  _id: string;
+  note: string;
+  addedBy: {
+    _id: string;
+    name: string;
+  };
+  date: string; // ISO date string
 }
 
 interface InquiryListProps {
   inquiries: Inquiry[];
 }
 
-
-
-
-
-
 const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
   const [inquiryList] = useState<Inquiry[]>(inquiries);
   const [viewMode, setViewMode] = useState<"card" | "table">("card");
   const navigate = useNavigate();
 
-
   const handleEdit = (id: string) => {
     navigate(`/admission/inquiries/${id}`);
   };
 
-
   return (
     <div className="space-y-6">
       {/* View controls */}
-      {/* View controls & filter in one row */}
       <div className="flex justify-between items-center">
-        {/* Left side: view mode buttons */}
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setViewMode("card")}
-            className={`p-2 rounded-md ${viewMode === "card"
-              ? "bg-brand-500 text-white"
-              : "bg-gray-200 dark:bg-gray-700 dark:text-white"
-              }`}
+            className={`p-2 rounded-md transition ${
+              viewMode === "card"
+                ? "bg-brand-500 text-white"
+                : "bg-gray-200 dark:bg-gray-700 dark:text-white"
+            }`}
             title="Card View"
           >
             <FaTh />
           </button>
           <button
             onClick={() => setViewMode("table")}
-            className={`p-2 rounded-md ${viewMode === "table"
-              ? "bg-brand-500 text-white"
-              : "bg-gray-200 dark:bg-gray-700 dark:text-white"
-              }`}
+            className={`p-2 rounded-md transition ${
+              viewMode === "table"
+                ? "bg-brand-500 text-white"
+                : "bg-gray-200 dark:bg-gray-700 dark:text-white"
+            }`}
             title="Table View"
           >
             <FaTable />
@@ -81,7 +84,7 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
             inquiryList.map((inquiry) => (
               <div
                 key={inquiry._id}
-                className="p-5 rounded-2xl shadow bg-white dark:bg-gray-800 dark:text-white border dark:border-gray-700 hover:shadow-lg transition-all"
+                className="p-5 rounded-2xl shadow bg-white dark:bg-gray-800 dark:text-white border dark:border-gray-700 hover:shadow-lg transition"
               >
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold flex items-center gap-2">
@@ -94,7 +97,7 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
                   />
                 </div>
 
-                <div className="text-sm space-y-2 text-gray-700 dark:text-gray-300">
+                <div className="text-sm space-y-3 text-gray-700 dark:text-gray-300">
                   <div className="flex items-center gap-2">
                     <FaPhone className="text-brand-500" />
                     {inquiry.phone}
@@ -105,18 +108,48 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
                   </div>
                   <div className="flex items-center gap-2">
                     <FaBook className="text-brand-500" />
-                    <span className="font-medium">Course:</span>{" "}
+                    <span className="font-medium">Course:</span>
                     {inquiry.courseInterest.title}
                   </div>
-                  <div
-                    className={`flex items-center justify-center gap-2 px-3 w-fit  rounded-full text-white text-sm font-medium
-                      ${inquiry.status === "pending" ? "bg-brand-500" : ""}
-                      ${inquiry.status === "approved" ? "bg-green-400" : ""}
-                      ${inquiry.status === "rejected" ? "bg-red-500" : ""}
-                      ${inquiry.status === "waitlisted" ? "bg-blue-500" : ""}
-                  `}
-                  >
-                    {inquiry.status}
+
+                  {/* Status Badge */}
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">Status:</span>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold capitalize
+                        ${
+                          inquiry.status === "pending"
+                            ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-700 dark:text-yellow-100"
+                            : ""
+                        }
+                        ${
+                          inquiry.status === "contacted" 
+                            ? "bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100"
+                            : ""
+                        }
+                        ${
+                          inquiry.status === "converted"
+                            ? "bg-red-100 text-red-700 dark:bg-red-700 dark:text-red-100"
+                            : ""
+                        }
+                        ${
+                          inquiry.status === "lost"
+                            ? "bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-blue-100"
+                            : ""
+                        }
+                      `}
+                    >
+                      {inquiry.status}
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className="font-medium">Notes:</span>{" "}
+                    <span className="text-gray-600 dark:text-gray-400">
+                      {inquiry.followUps && inquiry.followUps.length > 0
+                        ? inquiry.followUps[inquiry.followUps.length - 1].note
+                        : "No follow-up yet"}
+                    </span>
                   </div>
 
                   <div>
@@ -125,9 +158,10 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
                       {inquiry.message}
                     </span>
                   </div>
+
                   <div>
                     <span className="font-medium">Created:</span>{" "}
-                    {new Date(inquiry.createdAt).toLocaleString()}
+                    {new Date(inquiry.createdAt).toLocaleDateString()}
                   </div>
                 </div>
               </div>
@@ -149,7 +183,7 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
                     <th
                       key={header}
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider"
                     >
                       {header}
                     </th>
@@ -162,14 +196,14 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
                 inquiryList.map((inquiry) => (
                   <tr
                     key={inquiry._id}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-800"
+                    className="hover:bg-gray-50 dark:hover:bg-gray-800 transition"
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-brand-100 dark:bg-brand-900 rounded-full">
+                        <div className="h-10 w-10 flex items-center justify-center bg-brand-100 dark:bg-brand-900 rounded-full">
                           <FaUser className="text-brand-500" />
                         </div>
-                        <div className="ml-4">
+                        <div className="ml-3">
                           <div className="text-sm font-medium text-gray-900 dark:text-white">
                             {inquiry.name}
                           </div>
@@ -178,7 +212,7 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                       <div>{inquiry.email}</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
                         {inquiry.phone}
                       </div>
                     </td>

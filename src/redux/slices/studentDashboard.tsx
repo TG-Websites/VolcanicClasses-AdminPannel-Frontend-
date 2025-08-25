@@ -43,6 +43,7 @@ interface PurchasedCourse {
   description: string;
   programs: Program[];
   paymentStatus: string;
+  bannerImageUrl:string;
 }
 
 interface Announcement {

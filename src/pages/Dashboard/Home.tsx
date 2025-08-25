@@ -14,6 +14,7 @@ import AdmissionInquiries from "../../components/ecommerce/AdmissionInquiries";
 import Classes from "../classes/classes/Classes";
 import AnnouncementSection from "../../components/ecommerce/AnnouncementSection";
 import StudentDashboard from "../studentDashboard/StudentDashboard";
+import InquiriesCards from "../../components/ecommerce/InquiriesCards";
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
@@ -61,12 +62,18 @@ export default function Home() {
             <Classes />
           </div>
         )}
+        <div className="col-span-12 space-y-6 xl:col-span-7">
+          {user?.role === "telecaller"&& (
+            <InquiriesCards data={data} />
+          )}
+        </div>
 
         {(user?.role === "telecaller" || user?.role === "admin" || user?.role === "manager") && (
           <div className="col-span-12">
             <AdmissionInquiries />
           </div>
         )}
+
 
         
       </div>
