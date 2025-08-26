@@ -54,22 +54,20 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setViewMode("card")}
-            className={`p-2 rounded-md transition ${
-              viewMode === "card"
+            className={`p-2 rounded-md transition ${viewMode === "card"
                 ? "bg-brand-500 text-white"
                 : "bg-gray-200 dark:bg-gray-700 dark:text-white"
-            }`}
+              }`}
             title="Card View"
           >
             <FaTh />
           </button>
           <button
             onClick={() => setViewMode("table")}
-            className={`p-2 rounded-md transition ${
-              viewMode === "table"
+            className={`p-2 rounded-md transition ${viewMode === "table"
                 ? "bg-brand-500 text-white"
                 : "bg-gray-200 dark:bg-gray-700 dark:text-white"
-            }`}
+              }`}
             title="Table View"
           >
             <FaTable />
@@ -117,25 +115,21 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
                     <span className="font-medium">Status:</span>
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-semibold capitalize
-                        ${
-                          inquiry.status === "pending"
-                            ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-700 dark:text-yellow-100"
-                            : ""
+                        ${inquiry.status === "pending"
+                          ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-700 dark:text-yellow-100"
+                          : ""
                         }
-                        ${
-                          inquiry.status === "contacted" 
-                            ? "bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100"
-                            : ""
+                        ${inquiry.status === "contacted"
+                          ? "bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100"
+                          : ""
                         }
-                        ${
-                          inquiry.status === "converted"
-                            ? "bg-red-100 text-red-700 dark:bg-red-700 dark:text-red-100"
-                            : ""
+                        ${inquiry.status === "converted"
+                          ? "bg-red-100 text-red-700 dark:bg-red-700 dark:text-red-100"
+                          : ""
                         }
-                        ${
-                          inquiry.status === "lost"
-                            ? "bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-blue-100"
-                            : ""
+                        ${inquiry.status === "lost"
+                          ? "bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-blue-100"
+                          : ""
                         }
                       `}
                     >
@@ -178,7 +172,7 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-800">
               <tr>
-                {["Name", "Contact", "Course", "Message", "Created", "Edit"].map(
+                {["Name", "Contact", "Course", "Message", "Created", "Status", "Edit"].map(
                   (header) => (
                     <th
                       key={header}
@@ -224,6 +218,30 @@ const InquiriesList: React.FC<InquiryListProps> = ({ inquiries }) => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {new Date(inquiry.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 line-clamp-2 max-w-xs">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold capitalize
+                        ${inquiry.status === "pending"
+                            ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-700 dark:text-yellow-100"
+                            : ""
+                          }
+                        ${inquiry.status === "contacted"
+                            ? "bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100"
+                            : ""
+                          }
+                        ${inquiry.status === "converted"
+                            ? "bg-red-100 text-red-700 dark:bg-red-700 dark:text-red-100"
+                            : ""
+                          }
+                        ${inquiry.status === "lost"
+                            ? "bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-blue-100"
+                            : ""
+                          }
+                      `}
+                      >
+                        {inquiry.status}
+                      </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <FiEdit

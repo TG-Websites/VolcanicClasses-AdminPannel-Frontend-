@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axiosInstance from '../../utils/axiosInstance';
 import axios from 'axios';
+import { RootState } from "../store";
 
 // Common error handler
 const handleAxiosError = (err: unknown, defaultMsg: string): string => {
@@ -21,10 +22,10 @@ export interface Inquire {
     title: string;
   };
   message: string;
-  status: 'pending'| 'contacted' | 'converted' | 'lost';
+  status: 'pending' | 'contacted' | 'converted' | 'lost';
   createdAt: string;
   updatedAt: string;
-  followUpNote?:string;
+  followUpNote?: string;
   followUps?: FollowUp[];
 }
 
@@ -45,7 +46,7 @@ interface AdmissionFormPayload {
   email: string;
   courseInterest: string;
   message: string;
-  status: 'pending'| 'contacted' | 'converted' | 'lost';
+  status: 'pending' | 'contacted' | 'converted' | 'lost';
 }
 
 // Pagination interface
@@ -63,6 +64,13 @@ interface AdmissionState {
   inquiries: Inquire[];
   selectedInquiry: Inquire | null; // ✅ new
   pagination: Pagination;
+  statusCounts: {
+    total: number;
+    pending: number;
+    contacted: number;
+    converted: number;
+    lost: number;
+  };
 }
 
 // Initial state
@@ -73,6 +81,7 @@ const initialState: AdmissionState = {
   inquiries: [],
   selectedInquiry: null,
   pagination: { total: 0, page: 1, limit: 10 },
+  statusCounts: { total: 0, pending: 0, contacted: 0, converted: 0, lost: 0 },
 };
 
 // ======================= THUNKS ==========================
@@ -191,6 +200,24 @@ const admissionSlice = createSlice({
         state.loading = false;
         state.inquiries = action.payload.data;
         state.pagination = action.payload.pagination;
+
+        // 🔥 Calculate status counts
+        const counts = {
+          total: action.payload.data.length,
+          pending: 0,
+          contacted: 0,
+          converted: 0,
+          lost: 0,
+        };
+
+        action.payload.data.forEach((inq) => {
+          if (inq.status === "pending") counts.pending++;
+          if (inq.status === "contacted") counts.contacted++;
+          if (inq.status === "converted") counts.converted++;
+          if (inq.status === "lost") counts.lost++;
+        });
+
+        state.statusCounts = counts;
       })
       .addCase(
         getAllInQuiries.rejected,
@@ -248,6 +275,9 @@ const admissionSlice = createSlice({
       );
   },
 });
+
+export const selectStatusCounts = (state: RootState) =>
+  state.admission.statusCounts;
 
 export const { resetSuccess, clearSelectedInquiry } = admissionSlice.actions;
 export default admissionSlice.reducer;

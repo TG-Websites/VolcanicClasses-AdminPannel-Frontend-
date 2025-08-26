@@ -37,6 +37,12 @@ export default function Home() {
             <StudentDashboard />
           </div>
         )}
+
+        <div className="">
+          {user?.role === "telecaller"&& (
+            <InquiriesCards  />
+          )}
+        </div>
       <div className="grid grid-cols-12 gap-4 md:gap-6">
 
         {/* Everyone can see metrics */}
@@ -62,11 +68,6 @@ export default function Home() {
             <Classes />
           </div>
         )}
-        <div className="col-span-12 space-y-6 xl:col-span-7">
-          {user?.role === "telecaller"&& (
-            <InquiriesCards data={data} />
-          )}
-        </div>
 
         {(user?.role === "telecaller" || user?.role === "admin" || user?.role === "manager") && (
           <div className="col-span-12">
