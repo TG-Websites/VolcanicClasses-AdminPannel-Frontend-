@@ -95,7 +95,7 @@ const OrderDetail = () => {
           <span
             className={`px-3 py-1 rounded-lg border text-sm sm:text-base ${statusStyles[order.paymentStatus as keyof typeof statusStyles]}`}
           >
-            {order.paymentStatus}
+            <strong>Status :</strong> {order.paymentStatus}
           </span>
         </div>
 
