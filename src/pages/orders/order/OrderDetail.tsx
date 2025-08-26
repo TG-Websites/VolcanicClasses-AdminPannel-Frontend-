@@ -92,10 +92,11 @@ const OrderDetail = () => {
         {/* Payment Status */}
         <div className="flex items-center gap-3 p-3 sm:p-4 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700">
           {statusIcon[order.paymentStatus as keyof typeof statusIcon]}
+          <strong>Status :</strong>
           <span
             className={`px-3 py-1 rounded-lg border text-sm sm:text-base ${statusStyles[order.paymentStatus as keyof typeof statusStyles]}`}
           >
-            <strong>Status :</strong> {order.paymentStatus}
+             {order.paymentStatus}
           </span>
         </div>
 
