@@ -23,8 +23,18 @@ export default function Home() {
     dispatch(fetchAdminDashboard());
   }, [dispatch]);
 
-  const { data } = useSelector((state: RootState) => state.adminDashboard);
-  const { user } = useSelector((state: RootState) => state.auth); 
+  const { data, loading } = useSelector((state: RootState) => state.adminDashboard);
+  const { user } = useSelector((state: RootState) => state.auth);
+
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-500"></div>
+      </div>
+    );
+  }
+
 
   return (
     <>
@@ -32,38 +42,38 @@ export default function Home() {
         title="Dashboard"
         description="Role based dashboard"
       />
-      {(user?.role === "user" ) && (
-          <div className="">
-            <StudentDashboard />
-          </div>
-        )}
-
+      {(user?.role === "user") && (
         <div className="">
-          {user?.role === "telecaller"&& (
-            <InquiriesCards  />
-          )}
+          <StudentDashboard />
         </div>
+      )}
+
+      <div className="">
+        {user?.role === "telecaller" && (
+          <InquiriesCards />
+        )}
+      </div>
       <div className="grid grid-cols-12 gap-4 md:gap-6">
 
         {/* Everyone can see metrics */}
         <div className="col-span-12 space-y-6 xl:col-span-7">
 
-          {(user?.role === "admin" || user?.role === "manager")&& (
+          {(user?.role === "admin" || user?.role === "manager") && (
             <EcommerceMetrics data={data} />
           )}
-          {(user?.role === "admin" || user?.role === "manager")&& (
+          {(user?.role === "admin" || user?.role === "manager") && (
             <MonthlySalesChart />
           )}
 
         </div>
 
-        {(  user?.role === "admin" || user?.role === "manager") && (
+        {(user?.role === "admin" || user?.role === "manager") && (
           <div className="col-span-12 xl:col-span-5">
             <AnnouncementSection />
           </div>
         )}
 
-        { (user?.role === "admin" || user?.role === "manager") && (
+        {(user?.role === "admin" || user?.role === "manager") && (
           <div className="col-span-12">
             <Classes />
           </div>
@@ -76,7 +86,7 @@ export default function Home() {
         )}
 
 
-        
+
       </div>
     </>
   );

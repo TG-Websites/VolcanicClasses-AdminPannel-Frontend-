@@ -79,6 +79,14 @@ const AllPayments = () => {
   //   navigate(`/payment/${id}`);
   // };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-500"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -105,8 +113,6 @@ const AllPayments = () => {
           <FilterDropdown onApply={handleApplyFilters} onCancel={handleReload} />
         </div>
       </div>
-
-      {loading && <p className="text-gray-700 dark:text-gray-200">Loading Payments ...</p>}
 
       {!loading && !error && payments.length === 0 && (
         <div className="flex flex-col items-center gap-3">

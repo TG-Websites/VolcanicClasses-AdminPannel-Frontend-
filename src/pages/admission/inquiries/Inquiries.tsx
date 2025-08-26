@@ -12,53 +12,60 @@ const EnquiriesPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(10); // keep limit fixed
   const [searchTerm, setSearchTerm] = useState("");
-  const [filters, setFilters] = useState<{ status?: string; courseInterest?: string ; startDate?: string; endDate?: string }>({});
+  const [filters, setFilters] = useState<{ status?: string; courseInterest?: string; startDate?: string; endDate?: string }>({});
 
   const { inquiries, loading, error, pagination } = useSelector(
     (state: RootState) => state.admission
   );
 
-   const fetchInquiries = (page = currentPage, appliedFilters = filters, appliedSearch = searchTerm) => {
-          setCurrentPage(page);
-  
-          const query = new URLSearchParams({
-              ...appliedFilters,
-              search: appliedSearch,
+  const fetchInquiries = (page = currentPage, appliedFilters = filters, appliedSearch = searchTerm) => {
+    setCurrentPage(page);
 
-              page: String(page),
-              limit: String(limit),
-          }).toString();
-  
-          dispatch(getAllInQuiries(query));
-      };
+    const query = new URLSearchParams({
+      ...appliedFilters,
+      search: appliedSearch,
 
-    useEffect(() => {
-        fetchInquiries(1, filters, searchTerm); // ✅ always start fresh
-    }, []);
+      page: String(page),
+      limit: String(limit),
+    }).toString();
+
+    dispatch(getAllInQuiries(query));
+  };
+
+  useEffect(() => {
+    fetchInquiries(1, filters, searchTerm); // ✅ always start fresh
+  }, []);
 
 
-   const handleApplyFilters = (appliedFilters: { status?: string; courseInterest?: string ; startDate?: string; endDate?: string }) => {
-        const validFilters = Object.fromEntries(
-            Object.entries(appliedFilters).filter(([, value]) => value)
-        );
+  const handleApplyFilters = (appliedFilters: { status?: string; courseInterest?: string; startDate?: string; endDate?: string }) => {
+    const validFilters = Object.fromEntries(
+      Object.entries(appliedFilters).filter(([, value]) => value)
+    );
 
-        setFilters(validFilters);
-        setCurrentPage(1); // ✅ Reset to first page when filters change
-        fetchInquiries(1, validFilters, searchTerm);
-    };
+    setFilters(validFilters);
+    setCurrentPage(1); // ✅ Reset to first page when filters change
+    fetchInquiries(1, validFilters, searchTerm);
+  };
 
-    const handleSearch = () => {
-        setCurrentPage(1); // ✅ Reset to first page when search changes
-        fetchInquiries(1, filters, searchTerm);
-    };
+  const handleSearch = () => {
+    setCurrentPage(1); // ✅ Reset to first page when search changes
+    fetchInquiries(1, filters, searchTerm);
+  };
 
-    const handleReload = () => {
-        setFilters({});
-        setSearchTerm("");
-        setCurrentPage(1);
-        fetchInquiries(1, {}, "");
-    };
+  const handleReload = () => {
+    setFilters({});
+    setSearchTerm("");
+    setCurrentPage(1);
+    fetchInquiries(1, {}, "");
+  };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -92,7 +99,6 @@ const EnquiriesPage: React.FC = () => {
       </div>
 
       {/* ✅ Inquiries Display */}
-      {loading && <p>Loading inquiries...</p>}
       {error && <p className="text-red-500">Error: {error}</p>}
       {!loading && inquiries.length === 0 && (
         <div className="flex flex-col items-center justify-center ">

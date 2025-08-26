@@ -40,7 +40,13 @@ const CourseEdit = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-500"></div>
+            </div>
+        );
+    }
   if (!initialData) return <p>Course not found</p>;
 
   return <CourseEditForm initialData={initialData} onSubmit={handleUpdate} />;

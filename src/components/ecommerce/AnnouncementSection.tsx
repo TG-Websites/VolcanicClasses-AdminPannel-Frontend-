@@ -15,6 +15,9 @@ const AnnouncementSection = () => {
     useEffect(() => {
         dispatch(getAllAnnouncement());
     }, [])
+    
+
+    
 
     return (
         <div className="bg-white h-[460px] shadow p-4 dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-300 rounded-xl overflow-scroll overflow-x-hidden">

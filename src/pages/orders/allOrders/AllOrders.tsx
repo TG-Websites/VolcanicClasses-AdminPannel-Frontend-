@@ -14,7 +14,7 @@ const AllOrders = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(10); // fixed page size
   const [searchTerm, setSearchTerm] = useState("");
-  const [filters, setFilters] = useState<{ paymentStatus?: string; course?: string;startDate?: string;endDate?: string; }>({});
+  const [filters, setFilters] = useState<{ paymentStatus?: string; course?: string; startDate?: string; endDate?: string; }>({});
 
   const { orders, loading, error, pagination } = useSelector(
     (state: RootState) => state.order
@@ -43,7 +43,7 @@ const AllOrders = () => {
   }, []);
 
   // ✅ Apply Filters → Reset to page 1
-  const handleApplyFilters = (appliedFilters: { paymentStatus?: string; course?: string;startDate?: string;endDate?: string; }) => {
+  const handleApplyFilters = (appliedFilters: { paymentStatus?: string; course?: string; startDate?: string; endDate?: string; }) => {
     const validFilters = Object.fromEntries(
       Object.entries(appliedFilters).filter(([, value]) => value)
     );
@@ -70,6 +70,14 @@ const AllOrders = () => {
   const clickHandler = (id: string) => {
     navigate(`/order/${id}`);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 sm:p-6">
@@ -98,14 +106,12 @@ const AllOrders = () => {
             </button>
           </div>
 
-          <FilterDropdown onApply={handleApplyFilters} onCancel={handleReload}  />
+          <FilterDropdown onApply={handleApplyFilters} onCancel={handleReload} />
         </div>
       </div>
 
-      {/* Loading & Error States */}
-      {loading && (
-        <p className="text-gray-700 dark:text-gray-200">Loading orders...</p>
-      )}
+      {/*Error States */}
+
       {error && <p className="text-red-500">{error}</p>}
 
       {/* No Orders Found */}

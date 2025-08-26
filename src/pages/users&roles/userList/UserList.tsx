@@ -78,6 +78,14 @@ const UserList = () => {
     setCurrentPage(1);
     fetchUsers(1, {}, "");
   };
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 sm:p-6">
@@ -110,7 +118,7 @@ const UserList = () => {
         </div>
       </div>
 
-      {loading && <p className="text-gray-700 dark:text-gray-200">Loading users...</p>}
+     
       {error && <p className="text-red-500">{error}</p>}
 
       {!loading && !error && users.length === 0 && (

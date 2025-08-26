@@ -89,10 +89,10 @@ const StudentDashboard: React.FC = () => {
                     Mode
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Duration
+                    PriceLabel
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    PriceLabel
+                    Price
                   </th>
                 </tr>
               </thead>
@@ -126,7 +126,7 @@ const StudentDashboard: React.FC = () => {
                       ))}
                     </td>
                     <td className="px-6 py-4 text-gray-800 dark:text-gray-100">
-                      ₹{course.programs[0]?.price?.toFixed(2) ?? "N/A"}
+                      ₹{course.programs[0]?.price?.toFixed(2) ?? "N/A"} 
                     </td>
                   </tr>
                 ))}

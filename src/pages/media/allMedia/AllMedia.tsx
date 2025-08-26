@@ -11,7 +11,7 @@ import Pagination from "../../../utils/Pagination";
 
 const AllMedia = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { mediaList, pagination } = useSelector((state: RootState) => state.media);
+  const { mediaList, pagination, loading } = useSelector((state: RootState) => state.media);
   const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(5); // fixed
   const [searchTerm, setSearchTerm] = useState("");
@@ -65,6 +65,14 @@ const AllMedia = () => {
     fetchMedia(1, {}, "");
   };
 
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-500"></div>
+      </div>
+    );
+  }
 
 
   return (

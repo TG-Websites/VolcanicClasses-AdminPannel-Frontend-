@@ -68,9 +68,9 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply , onCancel}) =>
             >
               <option value="">All</option>
               <option value="pending">Pending</option>
-              <option value="approved">Approved</option>
-              <option value="rejected">Rejected</option>
-              <option value="waitlisted">Waitlisted</option>
+              <option value="contacted">Contacted</option>
+              <option value="converted">Converted</option>
+              <option value="lost">lost</option>
             </select>
           </div>
 

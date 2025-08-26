@@ -79,6 +79,7 @@ interface CourseDetailProps {
 }
 
 
+
 export const CourseDetail = ({ course }: CourseDetailProps) => {
     return (
         <div className="max-w-7xl mx-auto py-8 px-4 bg-white dark:bg-gray-800 rounded-xl">

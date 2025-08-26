@@ -37,7 +37,13 @@ const EditUser = () => {
         }
     };
 
-    if (loading) return <p className="p-4">Loading user...</p>;
+    if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-500"></div>
+      </div>
+    );
+  }
     if (!user || !user.name || !user.email || !user.role) {
         return <p className="p-4">No user data found.</p>;
     }
