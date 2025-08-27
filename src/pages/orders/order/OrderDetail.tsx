@@ -73,8 +73,8 @@ const OrderDetail = () => {
           { icon: <FiUser />, label: "Student Name", value: order.user.name },
           { icon: <FiPhone />, label: "Mobile", value: order.user.mobileNumber },
           { icon: <FiMail className="text-red-500" />, label: "Email", value: order.user.email },
-          { icon: <FiBook />, label: "Class", value: order.className },
-          { icon: <FiHash />, label: "Course ID", value: order.course.title },
+          { icon: <FiBook />, label: "Class Name", value: order.className },
+          { icon: <FiHash />, label: "Course ", value: order.course.title },
           { icon: <FiType />, label: "Course Type", value: order.courseType },
           { icon: <FiCreditCard />, label: "Amount", value: `₹${order.amount}` },
         ].map((item, idx) => (

@@ -278,7 +278,7 @@ const MediaUpload = () => {
             const file = event.currentTarget.files?.[0] || null;
             formik.setFieldValue("file", file);
           }}
-          className=" px-3 py-2 border border-gray-300 dark:border-gray-600 dark:text-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500 dark:focus:ring-brand-500 file:mr-4 file:py-1 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-gray-600 dark:file:text-gray-200"
+         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500 dark:focus:ring-brand-500 dark:bg-gray-700 dark:text-white"
         />
         {formik.touched.file && formik.errors.file && (
           <div className="text-red-500 dark:text-red-400 text-xs mt-1">{formik.errors.file}</div>
