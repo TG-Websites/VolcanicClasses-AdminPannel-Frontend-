@@ -1,5 +1,5 @@
 // import { useEffect } from 'react';
-import { Pencil } from 'lucide-react';
+// import { Pencil } from 'lucide-react';
 import {  useSelector } from 'react-redux';
 // import { AppDispatch } from '../../redux/store';
 // import { gotme } from '../../redux/slices/auth';
@@ -28,7 +28,7 @@ const Profile = () => {
                     <div>
                         <h2 className="text-xl font-semibold text-gray-900">{user?.name}</h2>
                         <p className="text-sm text-gray-600">{user?.role}</p>
-                        <p className="text-sm text-gray-600">Leeds, United Kingdom</p>
+                        {/* <p className="text-sm text-gray-600">Leeds, United Kingdom</p> */}
                     </div>
                 </div>
             </div>
@@ -37,9 +37,9 @@ const Profile = () => {
             <div className="bg-white shadow rounded-lg p-6">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold text-gray-900">Personal Information</h3>
-                    <button className="text-white bg-brand-500 hover:bg-brand-600 p-2 rounded">
+                    {/* <button className="text-white bg-brand-500 hover:bg-brand-600 p-2 rounded">
                         <Pencil className="w-4 h-4" />
-                    </button>
+                    </button> */}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -47,21 +47,18 @@ const Profile = () => {
                         <p className="font-medium text-gray-800">{user?.name}</p>
                     </div>
                     <div>
-                        <p className="text-sm text-gray-500">Last Name</p>
-                        <p className="font-medium text-gray-800">Hopper</p>
-                    </div>
-                    <div>
                         <p className="text-sm text-gray-500">Email Address</p>
                         <p className="font-medium text-gray-800">{user?.email}</p>
                     </div>
-                    <div>
+                   
+                    {/* <div>
                         <p className="text-sm text-gray-500">Phone Number</p>
                         <p className="font-medium text-gray-800">(+62) 821 2554-5846</p>
-                    </div>
-                    <div>
+                    </div> */}
+                    {/* <div>
                         <p className="text-sm text-gray-500">Date of Birth</p>
                         <p className="font-medium text-gray-800">12-10-1990</p>
-                    </div>
+                    </div> */}
                     <div>
                         <p className="text-sm text-gray-500">User Role</p>
                         <p className="font-medium text-gray-800">{user?.role}</p>
@@ -70,7 +67,7 @@ const Profile = () => {
             </div>
 
             {/* Address */}
-            <div className="bg-white shadow rounded-lg p-6">
+            {/* <div className="bg-white shadow rounded-lg p-6">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold text-gray-900">Address</h3>
                     <button className="text-white bg-brand-500 hover:bg-brand-600 p-2 rounded">
@@ -91,7 +88,7 @@ const Profile = () => {
                         <p className="font-medium text-gray-800">ERT 1254</p>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };
