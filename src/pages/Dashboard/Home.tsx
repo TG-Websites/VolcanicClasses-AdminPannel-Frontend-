@@ -17,14 +17,16 @@ import StudentDashboard from "../studentDashboard/StudentDashboard";
 import InquiriesCards from "../../components/ecommerce/InquiriesCards";
 
 export default function Home() {
+
   const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    dispatch(fetchAdminDashboard());
-  }, [dispatch]);
-
   const { data, loading } = useSelector((state: RootState) => state.adminDashboard);
   const { user } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+  if (user?.role === "admin" || user?.role === "manager" ) {
+    dispatch(fetchAdminDashboard());
+  }
+}, [dispatch, user?.role]);
 
 
   if (loading) {

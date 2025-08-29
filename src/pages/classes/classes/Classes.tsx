@@ -260,6 +260,20 @@ const Classes: React.FC = () => {
                           <GlobeIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400" />
                           <span>{cls.mode || 'offline'}</span>
                         </div>
+                         <div className="flex items-center">
+                          {!cls.isCancelled ? (
+                            <a
+                              href={cls.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-3 text-sm bg-brand-400 text-white rounded-md hover:bg-brand-600 transition"
+                            >
+                              Join
+                            </a>
+                          ) : (
+                            <span className="text-sm text-gray-400">No Link</span>
+                          )}
+                        </div>
                       </div>
                     </div>
 
