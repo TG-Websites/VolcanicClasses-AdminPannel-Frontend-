@@ -6,6 +6,7 @@ import FilterDropdown from "../components/FilterDropdown";
 import Pagination from "../../../utils/Pagination";
 import { FaSearch } from "react-icons/fa";
 import { IoReload } from "react-icons/io5";
+import { useNavigate } from "react-router";
 // import { useNavigate } from "react-router";
 
 const AllPayments = () => {
@@ -74,10 +75,10 @@ const AllPayments = () => {
         fetchPayments(1, {}, "");
     };
 
-    // const navigate = useNavigate();
-  //   const clickHandler = (id: string) => {
-  //   navigate(`/payment/${id}`);
-  // };
+    const navigate = useNavigate();
+    const clickHandler = (id: string) => {
+    navigate(`/order/${id}`);
+  };
 
   if (loading) {
     return (
@@ -143,11 +144,12 @@ const AllPayments = () => {
             <tbody>
               {payments.map((payment) => (
                 <tr
-                // onClick={() => clickHandler(payment._id)}
                   key={payment._id}
                   className="border-t dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors"
                 >
-                  <td className="p-4 text-gray-800 dark:text-gray-100">
+                  <td 
+                  onClick={() => clickHandler(payment.order._id)}
+                  className="p-4 text-gray-800 dark:text-gray-100 cursor-pointer">
                     {payment.transactionId}
                   </td>
                   <td className="p-4 text-gray-800 dark:text-gray-100">

@@ -3,17 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { getPaymentById } from "../../../redux/slices/payment";
+import { TbTransactionRupee } from "react-icons/tb";
+import { MdOutlinePayment } from "react-icons/md";
+import { FaMoneyBill } from "react-icons/fa";
+import { BsCurrencyExchange } from "react-icons/bs";
 
 import {
-  MdPerson,
-  MdEmail,
-  MdPhone,
   MdClass,
-  MdNumbers,
   MdPayments,
   MdCheckCircle,
   MdAccessTime,
 } from "react-icons/md";
+import { FiHash } from "react-icons/fi";
 
 // import logo from "../../../assets/logo.png"; // 👈 update your logo path
 
@@ -47,21 +48,21 @@ const PaymentDetail = () => {
         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Transaction ID */}
           <div className="flex items-center gap-2 border p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
-            <MdPerson className="text-red-500" />
+            <TbTransactionRupee className="text-red-500" />
             <span className="font-semibold">Transaction ID:</span>
             <span className="ml-1">{payment.transactionId}</span>
           </div>
 
           {/* Currency */}
           <div className="flex items-center gap-2 border p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
-            <MdEmail className="text-red-500" />
+            <BsCurrencyExchange className="text-red-500" />
             <span className="font-semibold">Currency:</span>
             <span className="ml-1">{payment.currency}</span>
           </div>
 
           {/* Payment ID */}
           <div className="flex items-center gap-2 border p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
-            <MdPhone className="text-red-500" />
+            <MdOutlinePayment className="text-red-500" />
             <span className="font-semibold">Payment ID:</span>
             <span className="ml-1">{payment.order?.paymentId}</span>
           </div>
@@ -75,7 +76,7 @@ const PaymentDetail = () => {
 
           {/* Amount */}
           <div className="flex items-center gap-2 border p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
-            <MdNumbers className="text-red-500" />
+            <FaMoneyBill className="text-red-500" />
             <span className="font-semibold">Amount:</span>
             <span className="ml-1">₹{payment.amount}</span>
           </div>
@@ -100,13 +101,22 @@ const PaymentDetail = () => {
           </div>
 
           {/* Paid At */}
-          <div className="flex items-center gap-2 border p-3 rounded-lg bg-gray-50 dark:bg-gray-700 sm:col-span-2">
-            <MdAccessTime className="text-red-500" />
+          <div className="flex items-center gap-2 border p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
+             <MdAccessTime className="text-red-500" />
             <span className="font-semibold">Paid At:</span>
             <span className="ml-1">
               {new Date(payment.paidAt).toLocaleString()}
             </span>
+           <div>
+           </div>
+
           </div>
+           <div className="flex items-center gap-2 border p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
+            < FiHash className="text-red-500" />
+            <span className="font-semibold">Order Id:</span>
+            <span className="ml-1">{payment.order._id}</span>
+          </div>
+
         </div>
       </div>
     </div>

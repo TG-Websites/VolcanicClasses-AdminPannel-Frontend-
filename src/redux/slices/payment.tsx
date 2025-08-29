@@ -9,6 +9,7 @@ export interface Payment {
   status: string;
   order: {
     paymentId: string
+    _id:string
   };
   transactionId: string;
   amount: number;
