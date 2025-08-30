@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { AppDispatch, RootState } from '../../redux/store';
 import {Link} from "react-router-dom"
 import { Studentlogin } from '../../redux/slices/auth';
+import toast from 'react-hot-toast';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required('email is required'),
@@ -15,13 +16,21 @@ const StudentForm: React.FC = () => {
 
 
 const handleSubmit = async (values: { email: string }) => {
-  // ✅ Save email immediately
   localStorage.setItem("studentEmail", values.email);
+
   const resultAction = await dispatch(Studentlogin(values));
+
   if (Studentlogin.fulfilled.match(resultAction)) {
-    window.location.href = '/verifyotp';
+    window.location.href = "/verifyotp";
+  } else if (Studentlogin.rejected.match(resultAction)) {
+    const errorMessage =
+      resultAction.payload || 
+      resultAction.error?.message 
+    toast.error(errorMessage as string)
   }
 };
+
+
 
 
   return (

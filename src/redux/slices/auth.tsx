@@ -51,6 +51,11 @@ const initialState: AuthState = {
   isStudentLogin: false,
 };
 
+interface ApiResponse {
+  success: boolean;
+  message: string;
+}
+
 // ✅ Reusable error handler
 const handleAxiosError = (err: unknown, defaultMsg: string) => {
   if (axios.isAxiosError(err)) {
@@ -74,16 +79,21 @@ export const login = createAsyncThunk<
 });
 
 export const Studentlogin = createAsyncThunk<
-  void,
-  StudentLoginPayload,
-  { rejectValue: string }
+  ApiResponse,                // success return type
+  StudentLoginPayload,        // argument type
+  { rejectValue: string }     // rejected payload type
 >(
-  'auth/studentLogin',
+  "auth/studentLogin",
   async (credentials, { rejectWithValue }) => {
     try {
-      await axiosInstance.post('/api/student/login', credentials);
+      const response = await axiosInstance.post<ApiResponse>(
+        "/api/student/login",
+        credentials
+      );
+      return response.data; // success response
     } catch (err: unknown) {
-      return rejectWithValue(handleAxiosError(err, 'Student login failed'));
+      // handleAxiosError should return a string message
+      return rejectWithValue(handleAxiosError(err, "Student login failed"));
     }
   }
 );

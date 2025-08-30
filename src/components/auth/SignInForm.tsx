@@ -2,10 +2,11 @@ import  { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { EyeCloseIcon, EyeIcon } from '../../icons';
 import { AppDispatch, RootState } from '../../redux/store';
 import { login } from '../../redux/slices/auth';
 import {Link} from "react-router-dom"
+import { Eye, EyeOff } from "lucide-react";
+
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required('email is required'),
@@ -64,9 +65,9 @@ const handleSubmit = async (values: { email: string; password: string }) => {
                   />
                   <span
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-2 cursor-pointer"
+                    className="absolute right-4 top-2 cursor-pointer text-black"
                   >
-                    {showPassword ? <EyeIcon /> : <EyeCloseIcon />}
+                    {showPassword ? < EyeOff className='text-gray-600 dark:text-gray-200 w-4'/> : < Eye  className='text-gray-600 dark:text-gray-200 w-4'/>}
                   </span>
                 </div>
                 <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
