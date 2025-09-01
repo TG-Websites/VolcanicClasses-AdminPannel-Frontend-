@@ -21,7 +21,6 @@ export const fetchAdminDashboard = createAsyncThunk(
     }
   }
 );
-
 interface LiveClass {
   isCancelled: boolean;
   _id: string;
@@ -34,12 +33,29 @@ interface LiveClass {
   createdAt: string;
 }
 
+interface ChartSeries {
+  name: string;
+  data: number[];
+}
+
+interface ChartData {
+  labels: string[];
+  series: ChartSeries[];
+}
+
+interface ChartResponse {
+  weekly: ChartData;
+  monthly: ChartData;
+  yearly: ChartData;
+}
+
 interface AdminDashboardData {
   courseCount: number;
   liveClassCount: number;
   unresolvedInquiryCount: number;
   totalRevenue: number;
   upcomingLiveClasses: LiveClass[];
+  chartData: ChartResponse;
 }
 
 interface AdminDashboardState {
@@ -53,6 +69,7 @@ const initialState: AdminDashboardState = {
   data: null,
   error: null,
 };
+
 
 const adminDashboardSlice = createSlice({
   name: 'adminDashboard',

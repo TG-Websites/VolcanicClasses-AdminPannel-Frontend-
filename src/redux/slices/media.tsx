@@ -90,7 +90,6 @@ export const getAllMedia = createAsyncThunk<
         data: MediaItem[];
         pagination: Pagination;
       }>(url);
-      console.log("Hello",response.data)
 
       return {
         data: response.data.data,

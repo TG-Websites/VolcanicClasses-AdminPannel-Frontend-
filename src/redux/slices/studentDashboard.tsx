@@ -16,7 +16,6 @@ export const fetchStudentDashboard = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get('/api/dashboard/student');
-      console.log("studentHome", response.data);
       return response.data.data;
     } catch (error: unknown) {
       return rejectWithValue(

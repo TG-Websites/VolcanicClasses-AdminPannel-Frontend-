@@ -16,6 +16,8 @@ export interface User {
   email: string;
   password?: string;
   role: 'admin' | 'manager' | 'telecaller' | 'user';
+  mobileNumber:string;
+  createdAt:string
 }
 
 interface UserState {

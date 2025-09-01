@@ -12,7 +12,6 @@ export const uploadImage = createAsyncThunk<string, File>(
       method: 'POST',
       body: formData,
     });
-    console.log("imageurl",response.url)
 
     const data = await response.json();
 

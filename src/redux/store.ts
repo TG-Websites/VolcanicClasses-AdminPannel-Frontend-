@@ -11,6 +11,7 @@ import adminDashboardReducer from './slices/dashboard'
 import orderReducer from './slices/order'
 import paymentReducer from './slices/payment'
 import studentDashboardReducer from './slices/studentDashboard'
+import studentDetailReducer from './slices/studentDetail'
 
 
 export const store = configureStore({
@@ -26,7 +27,8 @@ export const store = configureStore({
     adminDashboard : adminDashboardReducer,
     order : orderReducer,
     payment : paymentReducer,
-    studentDashboard : studentDashboardReducer
+    studentDashboard : studentDashboardReducer,
+    studentDetail : studentDetailReducer
   },
 })
 

@@ -38,6 +38,9 @@ import Verifyotp from "./pages/AuthPages/Verifyotp";
 import StudentSignIn from "./pages/AuthPages/StudentSignIn";
 import "react-datepicker/dist/react-datepicker.css";
 import EditInquiries from "./pages/admission/EditInquiries.tsx/EditInquiries";
+import StudentList from "./pages/students/allStudents/StudenList";
+import StudentDetail from "./pages/students/studentDetail/studentDetail";
+
 
 
 export default function App() {
@@ -185,6 +188,23 @@ export default function App() {
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <EditUser />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/students"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <StudentList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/student/:id"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <StudentDetail />
               </ProtectedRoute>
             }
           />

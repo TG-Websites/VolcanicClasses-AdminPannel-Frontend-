@@ -6,6 +6,7 @@ import { MdOutlinePermMedia } from "react-icons/md";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBullhorn, faCartShopping, faChartLine, faCreditCard, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { MdOutlineLiveTv } from "react-icons/md";
+import { RiUserSettingsLine } from "react-icons/ri";
 
 
 // Assume these icons are imported from an icon library
@@ -34,14 +35,8 @@ const navItems: NavItem[] = [
   {
     icon: <FontAwesomeIcon icon={faChartLine} />,
     name: "Dashboard",
-    roles: ["admin", "manager", "telecaller"],
+    roles: ["admin", "manager", "telecaller","user"],
     subItems: [{ name: "Dashboard", path: "/", pro: false }],
-  },
-    {
-    icon: <FontAwesomeIcon icon={faChartLine} />,
-    name: "Dashboard",
-    roles: ["user"],
-    subItems: [{ name: "Student Dashboard", path: "/", pro: false }],
   },
   {
     icon: <RiBookShelfLine />,
@@ -78,6 +73,12 @@ const navItems: NavItem[] = [
     name: "Users & Roles",
     roles: ["admin"],
     subItems: [{ name: "User List", path: "/admin/users", pro: false }, { name: "Create New User", path: "/admin/users/create", pro: false }],
+  },
+  {
+    icon: <RiUserSettingsLine />,
+    name: "All Students",
+    roles: ["admin"],
+    subItems: [{ name: "Student List", path: "/admin/students", pro: false }],
   },
   {
     icon: <FontAwesomeIcon icon={faCartShopping} />,
