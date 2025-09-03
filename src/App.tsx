@@ -39,7 +39,8 @@ import StudentSignIn from "./pages/AuthPages/StudentSignIn";
 import "react-datepicker/dist/react-datepicker.css";
 import EditInquiries from "./pages/admission/EditInquiries.tsx/EditInquiries";
 import StudentList from "./pages/students/allStudents/StudenList";
-import StudentDetail from "./pages/students/studentDetail/studentDetail";
+import CreateManualAdmission from "./pages/manualAdmission/createManualAdmission/CreateManualAdmission";
+import StudentDetail from "./pages/students/studentDetail/StudentDetail";
 
 
 
@@ -118,6 +119,19 @@ export default function App() {
           />
 
           <Route path="/course/:id" element={<ProtectedRoute allowedRoles={["admin", "manager", "user"]}> <Course /> </ProtectedRoute>} />
+
+
+
+          {/* manual admission */}
+
+           <Route
+            path="/admission/manual"
+            element={
+              <ProtectedRoute allowedRoles={["admin", "manager"]}>
+                <CreateManualAdmission/>
+              </ProtectedRoute>
+            }
+          />
 
           {/* Admission module */}
           <Route
@@ -204,7 +218,7 @@ export default function App() {
             path="/admin/student/:id"
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
-                <StudentDetail />
+                <StudentDetail/>
               </ProtectedRoute>
             }
           />

@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBullhorn, faCartShopping, faChartLine, faCreditCard, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { MdOutlineLiveTv } from "react-icons/md";
 import { RiUserSettingsLine } from "react-icons/ri";
+import { PiStudentFill } from "react-icons/pi";
 
 
 // Assume these icons are imported from an icon library
@@ -43,6 +44,12 @@ const navItems: NavItem[] = [
     name: "Courses",
     roles: ["admin", "manager"],
     subItems: [{ name: "Add Course", path: "/course/add", pro: false }, { name: "All Course", path: "/course/list", pro: false }],
+  },
+  {
+    icon:  <PiStudentFill  />,
+    name: "Offline Admissions",
+    roles: ["admin", "manager"],
+    subItems: [{ name: "Admission", path: "/admission/manual", pro: false }],
   },
   {
     icon:  <FontAwesomeIcon icon={faGraduationCap} size="2x" />,

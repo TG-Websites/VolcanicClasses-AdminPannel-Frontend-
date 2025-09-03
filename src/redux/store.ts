@@ -12,6 +12,7 @@ import orderReducer from './slices/order'
 import paymentReducer from './slices/payment'
 import studentDashboardReducer from './slices/studentDashboard'
 import studentDetailReducer from './slices/studentDetail'
+import manualAdmissionReducer from './slices/manualAdmission'
 
 
 export const store = configureStore({
@@ -28,7 +29,8 @@ export const store = configureStore({
     order : orderReducer,
     payment : paymentReducer,
     studentDashboard : studentDashboardReducer,
-    studentDetail : studentDetailReducer
+    studentDetail : studentDetailReducer,
+    manualAdmission : manualAdmissionReducer,
   },
 })
 

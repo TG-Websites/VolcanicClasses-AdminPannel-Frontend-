@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../../../redux/store";
-import { getOrderById } from "../../../redux/slices/order";
+import { getOrderById, updateOrder } from "../../../redux/slices/order";
 import {
   FiUser,
   FiPhone,
@@ -16,10 +16,15 @@ import {
   FiXCircle,
   FiCalendar
 } from "react-icons/fi";
+import { FaEdit } from "react-icons/fa";
+
 
 const OrderDetail = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [paidAmount, setPaidAmount] = useState("");
+
 
   const { order, loading, error } = useSelector(
     (state: RootState) => state.order
@@ -59,12 +64,30 @@ const OrderDetail = () => {
     failed: <FiXCircle className="text-red-500" />,
   };
 
+const handleSubmitAmount = () => {
+  dispatch(
+    updateOrder({
+      id: id as string,
+      orderData: { paidAmount }, // wrap in orderData
+    })
+  );
+  setIsModalOpen(false);
+  setPaidAmount("");
+  window.location.reload();
+};
+
+
   return (
     <div className="max-w-4xl mx-auto bg-white dark:bg-gray-900 shadow-lg rounded-xl p-4 sm:p-8 mt-8 transition-colors">
       {/* Header */}
-      <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 dark:text-white flex items-center gap-3">
-        <FiCreditCard className="text-brand-500" /> Order Details
-      </h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 dark:text-white flex items-center gap-3">
+          <FiCreditCard className="text-brand-500" /> Order Details
+        </h2>
+        <div>
+          {order.paymentMode === "offline" ? <FaEdit className="h-10 w-7 text-brand-500 cursor-pointer" onClick={() => setIsModalOpen(true)} /> : <></>}
+        </div>
+      </div>
       <hr className="mb-6 border-gray-300 dark:border-gray-700" />
 
       {/* Grid layout */}
@@ -92,11 +115,11 @@ const OrderDetail = () => {
         {/* Payment Status */}
         <div className="flex items-center gap-3 p-3 sm:p-4 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700">
           {statusIcon[order.paymentStatus as keyof typeof statusIcon]}
-          <strong>Status :</strong>
+          <strong className="text-gray-800 dark:text-gray-100">Status :</strong>
           <span
             className={`px-3 py-1 rounded-lg border text-sm sm:text-base ${statusStyles[order.paymentStatus as keyof typeof statusStyles]}`}
           >
-             {order.paymentStatus}
+            {order.paymentStatus}
           </span>
         </div>
 
@@ -104,7 +127,17 @@ const OrderDetail = () => {
         <div className="flex items-center gap-3 p-3 sm:p-4 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700">
           <FiHash className="text-brand-500 text-xl" />
           <span className="text-gray-800 dark:text-gray-100">
-            <strong>Payment ID:</strong> {String(order.paymentId)}
+            {
+              order.paymentMode === "offline" ? (
+                <>
+                  <strong>DueAmount:</strong> {String(order.dueAmount)}
+                </>
+              ) : (
+                <>
+                  <strong>Payment ID:</strong> {String(order.paymentId)}
+                </>
+              )
+            }
           </span>
         </div>
 
@@ -113,10 +146,90 @@ const OrderDetail = () => {
         <div className="flex items-center gap-3 p-3 sm:p-4 border rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700">
           <FiCalendar className="text-brand-500 text-xl" />
           <span className="text-gray-800 dark:text-gray-100">
-            <strong>Created At:</strong> {new Date(order.createdAt).toLocaleString()}
+            <strong>Created At:</strong> {new Date(order.createdAt).toLocaleDateString()}
           </span>
         </div>
       </div>
+      {/* Previous Due Amount Track */}
+      {order.dueAmountTrack && order.dueAmountTrack.length > 0 && (
+        <div className="mt-8">
+          <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
+            <FiHash className="text-brand-500" /> Previous Due Amounts
+          </h3>
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full border border-gray-300 dark:border-gray-700 rounded-lg">
+              <thead className="bg-gray-100 dark:bg-gray-800">
+                <tr>
+                  <th className="px-4 py-2 text-left text-gray-700 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700">
+                    #
+                  </th>
+                  <th className="px-4 py-2 text-left text-gray-700 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700">
+                    Amount
+                  </th>
+                  <th className="px-4 py-2 text-left text-gray-700 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700">
+                    Submitted At
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {order.dueAmountTrack.map(
+                  (track: { _id: string; amount: number; submitted: string }, index: number) => (
+                    <tr
+                      key={track._id}
+                      className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    >
+                      <td className="px-4 py-2 border-b border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100">
+                        {index + 1}
+                      </td>
+                      <td className="px-4 py-2 border-b border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100">
+                        ₹{track.amount}
+                      </td>
+                      <td className="px-4 py-2 border-b border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100">
+                        {new Date(track.submitted).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-100 z-1">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-96">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+              Enter Due Amount
+            </h2>
+            <input
+              type="number"
+              value={paidAmount}
+              onChange={(e) => setPaidAmount(e.target.value)}
+              placeholder="Enter amount"
+              className="w-full p-2 border rounded-lg mb-4 dark:bg-gray-700 dark:text-white"
+            />
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitAmount}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+
+      )}
+
+
     </div>
   );
 };

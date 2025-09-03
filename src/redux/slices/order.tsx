@@ -130,6 +130,16 @@ export interface Order {
   user: User;
   createdAt: string;
   __v: number;
+  dueAmount: number;
+  paymentMode:string;
+  dueAmountTrack:DueAmountTrack[];
+}
+
+interface DueAmountTrack
+{
+  _id:string
+  amount:number;
+  submitted:string;
 }
 
 // -------- Pagination --------
@@ -158,6 +168,10 @@ const initialState: OrderState = {
   pagination: { total: 0, page: 1, limit: 10 },
 };
 
+interface updateOrderPayload  {
+  paidAmount:string;
+}
+
 // Utility to handle Axios errors
 const handleAxiosError = (err: unknown, defaultMsg: string) => {
   if (axios.isAxiosError(err)) {
@@ -165,6 +179,7 @@ const handleAxiosError = (err: unknown, defaultMsg: string) => {
   }
   return defaultMsg;
 };
+
 
 // -------- Thunks --------
 
@@ -192,6 +207,21 @@ export const getOrderById = createAsyncThunk<Order, string, { rejectValue: strin
       return res.data.data;
     } catch (err: unknown) {
       return rejectWithValue(handleAxiosError(err, "Fetch failed"));
+    }
+  }
+);
+
+export const updateOrder = createAsyncThunk(
+  'order/updateOrder',
+  async (
+    { id, orderData }: { id: string; orderData:updateOrderPayload },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.put(`/api/orders/${id}`, orderData);
+      return response.data;
+    } catch (err: unknown) {
+      return rejectWithValue(handleAxiosError(err, 'Course update failed'));
     }
   }
 );
