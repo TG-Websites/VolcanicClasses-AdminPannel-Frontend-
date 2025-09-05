@@ -14,17 +14,18 @@ import {
   FiCheckCircle,
   FiClock,
   FiXCircle,
-  FiCalendar
+  FiCalendar,
 } from "react-icons/fi";
 import { FaEdit } from "react-icons/fa";
-
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import ReceiptPDF from "../../../utils/ReceiptPDF"; // adjust path
 
 const OrderDetail = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [paidAmount, setPaidAmount] = useState("");
-
+  const [showReceipt, setShowReceipt] = useState(false);
 
   const { order, loading, error } = useSelector(
     (state: RootState) => state.order
@@ -45,17 +46,26 @@ const OrderDetail = () => {
   }
 
   if (error) {
-    return <p className="text-center text-red-500 dark:text-red-400 mt-6">{error}</p>;
+    return (
+      <p className="text-center text-red-500 dark:text-red-400 mt-6">{error}</p>
+    );
   }
 
   if (!order) {
-    return <p className="text-center text-gray-500 dark:text-gray-400 mt-6">Order not found</p>;
+    return (
+      <p className="text-center text-gray-500 dark:text-gray-400 mt-6">
+        Order not found
+      </p>
+    );
   }
 
   const statusStyles = {
-    completed: "bg-green-100 text-green-700 border-green-300 dark:bg-green-900 dark:text-green-200 dark:border-green-700",
-    pending: "bg-yellow-100 text-yellow-700 border-yellow-300 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-700",
-    failed: "bg-red-100 text-red-700 border-red-300 dark:bg-red-900 dark:text-red-200 dark:border-red-700",
+    completed:
+      "bg-green-100 text-green-700 border-green-300 dark:bg-green-900 dark:text-green-200 dark:border-green-700",
+    pending:
+      "bg-yellow-100 text-yellow-700 border-yellow-300 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-700",
+    failed:
+      "bg-red-100 text-red-700 border-red-300 dark:bg-red-900 dark:text-red-200 dark:border-red-700",
   };
 
   const statusIcon = {
@@ -64,18 +74,20 @@ const OrderDetail = () => {
     failed: <FiXCircle className="text-red-500" />,
   };
 
-const handleSubmitAmount = () => {
-  dispatch(
+const handleSubmitAmount = async () => {
+  await dispatch(
     updateOrder({
       id: id as string,
-      orderData: { paidAmount }, // wrap in orderData
+      orderData: { paidAmount },
     })
   );
-  setIsModalOpen(false);
-  setPaidAmount("");
-  window.location.reload();
-};
 
+  // re-fetch updated order
+  await dispatch(getOrderById(id as string));
+
+  setIsModalOpen(false);
+  setShowReceipt(true);
+};
 
   return (
     <div className="max-w-4xl mx-auto bg-white dark:bg-gray-900 shadow-lg rounded-xl p-4 sm:p-8 mt-8 transition-colors">
@@ -197,6 +209,30 @@ const handleSubmitAmount = () => {
         </div>
       )}
 
+
+      {/* Receipt download button */}
+      {showReceipt && (
+        <div className="mt-6 flex justify-center">
+          <PDFDownloadLink
+            document={<ReceiptPDF order={order} paidAmount={paidAmount} />}
+            fileName={`Payment receipt-.pdf`}
+          >
+            {({ loading }) =>
+              loading ? (
+                <button className="px-4 py-2 bg-gray-500 text-white rounded-lg">
+                  Generating...
+                </button>
+              ) : (
+                <button className="mt-4 py-2 px-3 text-white  rounded-md bg-brand-500">
+                  Download Receipt
+                </button>
+              )
+            }
+          </PDFDownloadLink>
+        </div>
+      )}
+
+      {/* ---- Modal code (Enter Due Amount) ---- */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-100 z-1">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-96">
@@ -226,10 +262,7 @@ const handleSubmitAmount = () => {
             </div>
           </div>
         </div>
-
       )}
-
-
     </div>
   );
 };

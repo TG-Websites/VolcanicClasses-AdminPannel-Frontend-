@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axiosInstance from '../../utils/axiosInstance';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 // -------- Payment --------
 export interface Payment {
@@ -219,6 +220,7 @@ export const updateOrder = createAsyncThunk(
   ) => {
     try {
       const response = await axiosInstance.put(`/api/orders/${id}`, orderData);
+       toast.success("Student Updation Successful ");
       return response.data;
     } catch (err: unknown) {
       return rejectWithValue(handleAxiosError(err, 'Course update failed'));

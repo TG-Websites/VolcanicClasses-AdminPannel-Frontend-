@@ -46,6 +46,7 @@
     "dotenv": "^17.2.1",
     "faker-js": "^1.0.0",
     "flatpickr": "^4.6.13",
+    "font": "^0.0.4",
     "formik": "^2.4.6",
     "js-cookie": "^3.0.5",
     "jspdf": "^3.0.2",

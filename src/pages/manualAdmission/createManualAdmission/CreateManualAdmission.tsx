@@ -15,6 +15,7 @@ const CreateManualAdmission = () => {
   courseId: '',
   mode: '',      // assuming only these two modes
   paymentMode: 'offline', // assuming only these two
+  courseName:'',
   paidAmount: 0,
   className: '',
   };
@@ -22,7 +23,7 @@ const CreateManualAdmission = () => {
   const handleSubmit = async (values: StudentEnrollment) => {
     const result = await dispatch(createManualAdmission(values));
     if (createManualAdmission.fulfilled.match(result)) {
-      toast.success("Student Admission Successfully")
+       toast.success("Student Admission Successful");
     }
     console.log(values)
   };
