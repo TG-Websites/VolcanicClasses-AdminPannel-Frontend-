@@ -16,65 +16,86 @@ Font.register({
 
 // Styles
 const styles = StyleSheet.create({
-  page: {
-    padding: 40,
-    fontFamily: "Helvetica",
-    fontSize: 11,
-    lineHeight: 1.5,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 18,
-    color: "red",
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 12,
-    marginTop: 2,
-  },
-  sectionTitle: {
-    fontSize: 13,
-    fontWeight: "bold",
-    color: "red",
-    marginVertical: 10,
-    textAlign: "center",
-    textDecoration: "underline",
-  },
-  fieldLabel: {
-    fontWeight: "bold",
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 6,
-  },
-  footer: {
-    marginTop: 30,
-    textAlign: "center",
-    fontSize: 9,
-    color: "gray",
-  },
-  watermark: {
-    position: "absolute",
-    top: "40%",
-    left: "15%",
-    fontSize: 50,
-    color: "rgba(255,0,0,0.2)",
-    transform: "rotate(-30deg)",
-  },
-  amountBox: {
-    backgroundColor: "#1a2942",
-    color: "white",
-    padding: 10,
-    borderRadius: 6,
-    textAlign: "center",
-    marginTop: 20,
-    fontSize: 14,
-  },
+    page: {
+        padding: 40,
+        fontSize: 11,
+        fontFamily: "Helvetica",
+        color: "#333",
+    },
+    header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 10,
+    },
+    logoSection: {
+        flexDirection: "column",
+    },
+    logoText: {
+        fontSize: 16,
+        fontWeight: "bold",
+        color: "#c00",
+    },
+    subtitle: {
+        fontSize: 10,
+        color: "#666",
+    },
+    dateSection: {
+        textAlign: "right",
+        fontSize: 10,
+    },
+    title: {
+        fontSize: 14,
+        textAlign: "center",
+        marginVertical: 15,
+        color: "#c00",
+        fontWeight: "bold",
+        textDecoration: "underline",
+    },
+    section: {
+        marginBottom: 12,
+    },
+    sectionTitle: {
+        fontSize: 11,
+        marginBottom: 6,
+        fontWeight: "bold",
+        color: "#000",
+        textDecoration: "underline",
+    },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 4,
+    },
+    label: {
+        fontWeight: "bold",
+    },
+    footerBox: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 20,
+        backgroundColor: "#13294b",
+        color: "#fff",
+        padding: 10,
+        borderRadius: 4,
+    },
+    footerText: {
+        fontSize: 12,
+        fontWeight: "bold",
+    },
+    receiptFooter: {
+        marginTop: 30,
+        textAlign: "center",
+        fontSize: 9,
+        color: "#555",
+    },
+    watermark: {
+        position: "absolute",
+        top: "40%",
+        left: "20%",
+        fontSize: 40,
+        color: "rgba(200,0,0,0.1)",
+        transform: "rotate(-20deg)",
+    },
 });
 
 interface ReceiptPDFProps {
@@ -101,86 +122,89 @@ const ReceiptPDF_2: React.FC<ReceiptPDFProps> = ({ data }) => (
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>VOLCANIC CLASSES</Text>
+          <Text style={styles.logoText}>VOLCANIC CLASSES</Text>
           <Text style={styles.subtitle}>Official Education Receipt</Text>
         </View>
         <Text>{data.date}</Text>
       </View>
 
       {/* Title */}
-      <Text style={styles.sectionTitle}>EDUCATIONAL FEE RECEIPT</Text>
+      <Text style={styles.title}>EDUCATIONAL FEE RECEIPT</Text>
 
       {/* Transaction Details */}
-      <View style={{ marginTop: 15 }}>
-        <Text style={styles.fieldLabel}>TRANSACTION DETAILS</Text>
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>TRANSACTION DETAILS</Text>
         <View style={styles.row}>
-          <Text>Receipt Number:</Text>
+          <Text style={styles.label}>Receipt Number:</Text>
           <Text>{data.receiptNumber}</Text>
         </View>
         <View style={styles.row}>
-          <Text>Date:</Text>
+          <Text style={styles.label}>Date:</Text>
           <Text>{data.date}</Text>
         </View>
         <View style={styles.row}>
-          <Text>Time:</Text>
+          <Text style={styles.label}>Time:</Text>
           <Text>{data.time}</Text>
         </View>
         <View style={styles.row}>
-          <Text>Total Amount:</Text>
+          <Text style={styles.label}>Total Amount:</Text>
           <Text>{data.totalAmount}</Text>
         </View>
         <View style={styles.row}>
-          <Text>Remaining Amount:</Text>
+          <Text style={styles.label}>Remaining Amount:</Text>
           <Text>{data.remainingAmount}</Text>
         </View>
       </View>
 
       {/* Student Information */}
-      <View style={{ marginTop: 15 }}>
-        <Text style={styles.fieldLabel}>STUDENT INFORMATION</Text>
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>STUDENT INFORMATION</Text>
         <View style={styles.row}>
-          <Text>Full Name:</Text>
+          <Text  style={styles.label}>Full Name:</Text>
           <Text>{data.studentName}</Text>
         </View>
         <View style={styles.row}>
-          <Text>Contact:</Text>
+          <Text  style={styles.label}>Contact:</Text>
           <Text>{data.mobileNumber}</Text>
         </View>
         <View style={styles.row}>
-          <Text>Email:</Text>
+          <Text  style={styles.label}>Email:</Text>
           <Text>{data.email}</Text>
         </View>
         <View style={styles.row}>
-          <Text>Class/Grade:</Text>
+          <Text  style={styles.label}>Class/Grade:</Text>
           <Text>{data.className}</Text>
         </View>
       </View>
 
       {/* Course Details */}
-      <View style={{ marginTop: 15 }}>
-        <Text style={styles.fieldLabel}>COURSE DETAILS</Text>
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>COURSE DETAILS</Text>
         <View style={styles.row}>
-          <Text>Course:</Text>
+          <Text style={styles.label}>Course:</Text>
           <Text>{data.courseName}</Text>
         </View>
         <View style={styles.row}>
-          <Text>Mode:</Text>
+          <Text style={styles.label}>Mode:</Text>
           <Text>{data.mode}</Text>
         </View>
         <View style={styles.row}>
-          <Text>Duration:</Text>
+          <Text style={styles.label}>Duration:</Text>
           <Text>{data.duration}</Text>
         </View>
       </View>
 
       {/* Amount Paid */}
-      <Text style={styles.amountBox}>AMOUNT PAID: {data.paidAmount}</Text>
+      <View style={styles.footerBox}>
+                          <Text style={styles.footerText}>AMOUNT PAID</Text>
+                          <Text style={styles.footerText}>{data.paidAmount}</Text>
+      </View>
 
       {/* Watermark */}
       <Text style={styles.watermark}>VOLCANIC CLASSES</Text>
 
       {/* Footer */}
-      <Text style={styles.footer}>
+      <Text style={styles.receiptFooter}>
         OFFICIAL RECEIPT - VOLCANIC CLASSES {"\n"}
         This is a computer generated receipt and does not require physical
         signature {"\n"}
