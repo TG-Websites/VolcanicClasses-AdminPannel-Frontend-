@@ -25,6 +25,8 @@ const StudentDetail = () => {
     if (!data) return null;
 
     const { user, orders } = data;
+    const createdAt = new Date(user.createdAt).toLocaleDateString();
+
 
     return (
         <div className="p-4 space-y-4">
@@ -42,7 +44,7 @@ const StudentDetail = () => {
                         { icon: <FiUser />, label: "Student Name", value: user.name },
                         { icon: <FiPhone />, label: "Mobile", value: user.mobileNumber },
                         { icon: <FiMail className="text-red-500" />, label: "Email", value: user.email },
-                        { icon: <MdDateRange />, label: "createdAt", value: user.createdAt },
+                        { icon: <MdDateRange />, label: "createdAt", value: createdAt },
                     ].map((item, idx) => (
                         <div
                             key={idx}

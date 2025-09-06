@@ -1,6 +1,8 @@
 // src/components/ReceiptPDF.tsx
 import React from "react";
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet,Image } from "@react-pdf/renderer";
+import logo from '../Assets/logo.png'
+import { generateReceiptNumber } from "./generateReceiptNumber";
 
 // Define styles
 const styles = StyleSheet.create({
@@ -84,6 +86,11 @@ const styles = StyleSheet.create({
         color: "rgba(200,0,0,0.1)",
         transform: "rotate(-20deg)",
     },
+    logo: {
+    width: 120,  
+    height: "auto", 
+    marginBottom: 4,
+  },
 });
 
 interface ReceiptPDFProps {
@@ -96,7 +103,7 @@ interface ReceiptPDFProps {
 const ReceiptPDF: React.FC<ReceiptPDFProps> = ({ order, paidAmount }) => {
     const now = new Date();
     //   const remaining = order.dueAmount - Number(paidAmount);
-
+    const receiptNumber = generateReceiptNumber();
     // helper function
     const formatDate = (date: Date) => {
         const day = date.getDate();
@@ -124,14 +131,14 @@ const ReceiptPDF: React.FC<ReceiptPDFProps> = ({ order, paidAmount }) => {
                 {/* Header */}
                 <View style={styles.header}>
                     <View style={styles.logoSection}>
-                        <Text style={styles.logoText}>VOLCANIC CLASSES</Text>
+                        <Image src={logo} style={styles.logo} />
                         <Text style={styles.subtitle}>Official Education Receipt</Text>
                     </View>
+
                     <View style={styles.dateSection}>
                         <View style={styles.dateSection}>
                             <Text>{formatDate(now)}</Text>
                         </View>
-
                     </View>
                 </View>
 
@@ -143,15 +150,7 @@ const ReceiptPDF: React.FC<ReceiptPDFProps> = ({ order, paidAmount }) => {
                     <Text style={styles.sectionTitle}>TRANSACTION DETAILS</Text>
                     <View style={styles.row}>
                         <Text style={styles.label}>Receipt Number:</Text>
-                        <Text>{order._id}</Text>
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.label}>Date:</Text>
-                        <Text>{now.toLocaleDateString()}</Text>
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.label}>Time:</Text>
-                        <Text>{now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</Text>
+                        <Text>{receiptNumber}</Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Total Amount:</Text>
@@ -194,10 +193,6 @@ const ReceiptPDF: React.FC<ReceiptPDFProps> = ({ order, paidAmount }) => {
                     <View style={styles.row}>
                         <Text style={styles.label}>Mode:</Text>
                         <Text>{order.paymentMode}</Text>
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.label}>Duration:</Text>
-                        <Text>1 Year</Text>
                     </View>
                 </View>
 

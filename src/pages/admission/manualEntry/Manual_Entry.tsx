@@ -32,7 +32,9 @@ const AdmissionForm: React.FC = () => {
     },
     validationSchema: Yup.object({
       name: Yup.string().required('Name is required'),
-      phone: Yup.number().required('Phone is required'),
+      phone: Yup.string()
+        .required("Phone is required")
+        .matches(/^\d{10}$/, "Phone must be exactly 10 digits"),
       email: Yup.string().email('Invalid email').required('Email is required'),
       courseInterest: Yup.string().required('Course Interest is required'),
       message: Yup.string(),

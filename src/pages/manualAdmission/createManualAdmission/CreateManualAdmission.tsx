@@ -18,6 +18,7 @@ const CreateManualAdmission = () => {
   courseName:'',
   paidAmount: 0,
   className: '',
+   totalAmount:'',
   };
 
   const handleSubmit = async (values: StudentEnrollment) => {

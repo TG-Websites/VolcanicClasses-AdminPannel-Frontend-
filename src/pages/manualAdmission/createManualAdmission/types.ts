@@ -8,4 +8,5 @@ export type StudentEnrollment = {
   courseName:string;
   paidAmount: number;
   className: string;
+  totalAmount:string;
 }

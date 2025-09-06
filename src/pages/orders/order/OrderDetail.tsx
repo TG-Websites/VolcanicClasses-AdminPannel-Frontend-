@@ -215,7 +215,7 @@ const handleSubmitAmount = async () => {
         <div className="mt-6 flex justify-center">
           <PDFDownloadLink
             document={<ReceiptPDF order={order} paidAmount={paidAmount} />}
-            fileName={`Payment receipt-.pdf`}
+            fileName={`Payment receipt.pdf`}
           >
             {({ loading }) =>
               loading ? (
@@ -234,7 +234,7 @@ const handleSubmitAmount = async () => {
 
       {/* ---- Modal code (Enter Due Amount) ---- */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-100 z-1">
+        <div className="fixed  inset-0 flex items-center justify-center bg-black/70 z-5">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-96">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
               Enter Due Amount

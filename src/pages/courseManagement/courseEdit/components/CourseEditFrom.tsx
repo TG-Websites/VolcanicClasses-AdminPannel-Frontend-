@@ -27,7 +27,7 @@ const CourseEditForm = ({ initialData, onSubmit }: CourseEditFormProps) => {
   });
 
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-white dark:bg-black rounded-xl">
+    <div className="max-w-7xl mx-auto sm:p-6  bg-white rounded-xl dark:bg-black ">
       <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">Edit Course</h1>
 
       <form onSubmit={formik.handleSubmit} className="p-6 space-y-6">

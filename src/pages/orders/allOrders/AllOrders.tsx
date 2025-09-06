@@ -157,20 +157,20 @@ const AllOrders = () => {
                       className="cursor-pointer"
                       onClick={() => clickHandler(order._id)}
                     >
-                      {order.user.name}
+                      {order?.user?.name}
                     </span>
                   </td>
                   <td className="p-4 text-gray-800 dark:text-gray-100">
-                    {order.course.title}
+                    {order?.course?.title}
                   </td>
                   <td className="p-4 text-gray-700 dark:text-gray-200">
-                    {order.user.mobileNumber}
+                    {order?.user?.mobileNumber}
                   </td>
                   <td className="p-4 text-gray-700 dark:text-gray-300">
-                    {order.user.email}
+                    {order?.user?.email}
                   </td>
                   <td className="p-4 text-gray-700 dark:text-gray-200">
-                    {order.paymentStatus}
+                    {order?.paymentStatus}
                   </td>
                 </tr>
               ))}

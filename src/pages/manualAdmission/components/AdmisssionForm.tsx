@@ -7,6 +7,8 @@ import { getAllCourses } from "../../../redux/slices/course";
 import { StudentEnrollment } from "../createManualAdmission/types";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import ReceiptPDF_2 from "../../../utils/ReceiptPDF_2";
+import { generateReceiptNumber } from "../../../utils/generateReceiptNumber";
+
 
 interface Mode {
   _id: string;
@@ -161,31 +163,44 @@ const AdmisssionForm: React.FC<AdmissionFormProps> = ({
     dispatch(getAllCourses());
   }, [dispatch]);
 
-  const handleSubmit = (values: StudentEnrollment) => {
-    // Call the parent's onSubmit
-    onSubmit(values);
+const courses = useSelector((state: RootState) => state.course.courses);
 
-    // Generate receipt data
-    const newReceiptData = {
-      receiptNumber: "RCPT-" + Date.now(),
-      date: new Date().toLocaleDateString(),
-      time: new Date().toLocaleTimeString(),
-      totalAmount: 10000, // Example: You can replace with course.price
-      remainingAmount: 10000 - Number(values.paidAmount),
-      studentName: values.studentName,
-      mobileNumber: values.mobileNumber,
-      email: values.email,
-      className: values.className,
-      courseName:values.courseName,
-      course: values.courseId,
-      mode: values.mode,
-      duration: "6 months", // Example
-      paidAmount: values.paidAmount,
-    };
+const handleSubmit = (values: StudentEnrollment) => {
+  // find the course
+  const selectedCourse = courses.find((c) => c._id === values.courseId);
 
-    setReceiptData(newReceiptData);
-    setShowReceipt(true);
+  // find the mode
+  const selectedMode = selectedCourse?.programs?.find(
+    (p: any) => p.mode === values.mode
+  );
+
+  // get price
+  const totalAmount = selectedMode ? selectedMode.price : 0;
+  const remainingAmount = totalAmount - Number(values.paidAmount || 0);
+
+  // Call parent submit
+  onSubmit(values);
+
+  // Generate receipt data
+  const newReceiptData = {
+    receiptNumber: generateReceiptNumber(),
+    date: new Date().toLocaleDateString(),
+    time: new Date().toLocaleTimeString(),
+    totalAmount,           
+    remainingAmount,     
+    studentName: values.studentName,
+    mobileNumber: values.mobileNumber,
+    email: values.email,
+    className: values.className,
+    courseName: values.courseName,
+    course: values.courseId,
+    mode: values.mode,
+    paidAmount: values.paidAmount,
   };
+
+  setReceiptData(newReceiptData);
+  setShowReceipt(true);
+};
 
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-6xl rounded-xl bg-white dark:bg-gray-800 mx-auto p-6 shadow">
@@ -312,7 +327,7 @@ const AdmisssionForm: React.FC<AdmissionFormProps> = ({
         <div className="mt-4 py-2 px-3 text-white  rounded-md bg-brand-500">
           <PDFDownloadLink
             document={<ReceiptPDF_2 data={receiptData} />}
-            fileName={`receipt-${receiptData.receiptNumber}.pdf`}
+            fileName={`Payment receipt.pdf`}
           >
             {({ loading }) =>
               loading ? "Generating Receipt..." : "Download Receipt"
