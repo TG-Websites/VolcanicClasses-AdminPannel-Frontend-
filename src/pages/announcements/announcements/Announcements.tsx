@@ -4,7 +4,7 @@ import { deleteAnnouncement, getAllAnnouncement } from '../../../redux/slices/an
 import { AppDispatch, RootState } from '../../../redux/store';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
 import { format } from 'date-fns';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 import FilterDropdown from "../components/FilterDropdown";
 import toast from 'react-hot-toast';
 import Pagination from '../../../utils/Pagination';
@@ -14,6 +14,7 @@ import { IoReload } from 'react-icons/io5';
 const Announcements = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
+    const location = useLocation();
     const [currentPage, setCurrentPage] = useState(1);
     const [limit] = useState(10); // fixed
     const { announcements, error, pagination,loading } = useSelector(
@@ -28,20 +29,36 @@ const Announcements = () => {
         setCurrentPage(page);
 
 
-        const query = new URLSearchParams({
-            ...appliedFilters,
+        const queryParams = new URLSearchParams({
             search: appliedSearch,
             page: String(page),
             limit: String(limit),
-        }).toString();
+        });
 
-        dispatch(getAllAnnouncement(query));
+        if (appliedFilters.startDate) {
+            queryParams.set('startDate', appliedFilters.startDate);
+        }
+        if (appliedFilters.endDate) {
+            queryParams.set('endDate', appliedFilters.endDate);
+        }
+
+        dispatch(getAllAnnouncement(queryParams.toString()));
     };
 
-    // ✅ Initial fetch
     useEffect(() => {
-        fetchAnnouncement(currentPage, filters);
-    }, []);
+        const params = new URLSearchParams(location.search);
+        const startDate = params.get('startDate') || undefined;
+        const endDate = params.get('endDate') || undefined;
+        const search = params.get('search') || '';
+        const page = parseInt(params.get('page') || '1', 10);
+
+        const initialFilters = { startDate, endDate };
+        setFilters(initialFilters);
+        setSearchTerm(search);
+        setCurrentPage(page);
+
+        fetchAnnouncement(page, initialFilters, search);
+    }, [location.search, dispatch]);
 
     const toggleExpand = (id: string) => {
         setExpandedIds((prev) =>
@@ -67,7 +84,7 @@ const Announcements = () => {
 
     const handleSearch = () => {
         setCurrentPage(1);
-        fetchAnnouncement(1, filters, searchTerm);
+        updateURL(1, filters, searchTerm);
     };
 
 
@@ -78,14 +95,23 @@ const Announcements = () => {
         );
         setFilters(validFilters);
         setCurrentPage(1);
-        fetchAnnouncement(1, validFilters, searchTerm);
+        updateURL(1, validFilters, searchTerm);
     };
 
      const handleReload = () => {
         setFilters({});
         setSearchTerm("");
         setCurrentPage(1);
-        fetchAnnouncement(1, {}, "");
+        updateURL(1, {}, "");
+    };
+
+    const updateURL = (page: number, appliedFilters: { startDate?: string; endDate?: string }, appliedSearch: string) => {
+        const queryParams = new URLSearchParams();
+        if (appliedFilters.startDate) queryParams.set('startDate', appliedFilters.startDate);
+        if (appliedFilters.endDate) queryParams.set('endDate', appliedFilters.endDate);
+        if (appliedSearch) queryParams.set('search', appliedSearch);
+        queryParams.set('page', String(page));
+        navigate(`${location.pathname}?${queryParams.toString()}`);
     };
 
      if (loading) {
@@ -269,7 +295,7 @@ const Announcements = () => {
                 <Pagination
                     currentPage={currentPage}
                     totalPages={pagination.total}
-                    onPageChange={(page) => fetchAnnouncement(page)} // keeps filters applied
+                    onPageChange={(page) => updateURL(page, filters, searchTerm)}
                 />
             )}
         </div>

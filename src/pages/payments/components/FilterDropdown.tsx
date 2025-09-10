@@ -1,5 +1,6 @@
 // components/FilterDropdown.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { FiFilter } from "react-icons/fi";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";
@@ -15,11 +16,25 @@ interface FilterDropdownProps {
 }
 
 const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply,onCancel }) => {
+  const location = useLocation();
   const [tempStatus, setTempStatus] = useState("");
   const [tempMethod, setTempMethod] = useState("");
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [showFilter, setShowFilter] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const status = params.get('status') || '';
+    const method = params.get('method') || '';
+    const start = params.get('startDate');
+    const end = params.get('endDate');
+
+    setTempStatus(status);
+    setTempMethod(method);
+    setStartDate(start ? new Date(start) : null);
+    setEndDate(end ? new Date(end) : null);
+  }, [location.search]);
 
   const handleApply = () => {
     onApply({

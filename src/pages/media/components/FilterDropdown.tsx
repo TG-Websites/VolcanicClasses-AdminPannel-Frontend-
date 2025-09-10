@@ -1,5 +1,6 @@
 // components/FilterDropdown.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { FiFilter } from "react-icons/fi";
 
 interface FilterDropdownProps {
@@ -8,8 +9,15 @@ interface FilterDropdownProps {
 }
 
 const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply, onCancel }) => {
+  const location = useLocation();
   const [tempType, setTempType] = useState("");
   const [showFilter, setShowFilter] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const type = params.get('type') || '';
+    setTempType(type);
+  }, [location.search]);
 
   const handleApply = () => {
     onApply({

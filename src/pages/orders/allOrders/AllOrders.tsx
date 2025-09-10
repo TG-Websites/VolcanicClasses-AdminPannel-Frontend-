@@ -3,13 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { getAllOrders } from "../../../redux/slices/order";
 import { FaSearch, FaUser } from "react-icons/fa";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 import FilterDropdown from "../components/FilterDropdown";
 import Pagination from "../../../utils/Pagination";
 
 const AllOrders = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(10); // fixed page size
@@ -28,19 +29,44 @@ const AllOrders = () => {
   ) => {
     setCurrentPage(page);
 
-    const query = new URLSearchParams({
-      ...appliedFilters,
+    const queryParams = new URLSearchParams({
       search: appliedSearch,
       page: String(page),
       limit: String(limit),
-    }).toString();
+    });
 
-    dispatch(getAllOrders(query));
+    if (appliedFilters.paymentStatus) {
+        queryParams.set('paymentStatus', appliedFilters.paymentStatus);
+    }
+    if (appliedFilters.course) {
+        queryParams.set('course', appliedFilters.course);
+    }
+    if (appliedFilters.startDate) {
+        queryParams.set('startDate', appliedFilters.startDate);
+    }
+    if (appliedFilters.endDate) {
+        queryParams.set('endDate', appliedFilters.endDate);
+    }
+
+    dispatch(getAllOrders(queryParams.toString()));
   };
 
   useEffect(() => {
-    fetchOrders(1, filters, searchTerm); // ✅ always load from page 1 initially
-  }, []);
+    const params = new URLSearchParams(location.search);
+    const paymentStatus = params.get('paymentStatus') || undefined;
+    const course = params.get('course') || undefined;
+    const startDate = params.get('startDate') || undefined;
+    const endDate = params.get('endDate') || undefined;
+    const search = params.get('search') || '';
+    const page = parseInt(params.get('page') || '1', 10);
+
+    const initialFilters = { paymentStatus, course, startDate, endDate };
+    setFilters(initialFilters);
+    setSearchTerm(search);
+    setCurrentPage(page);
+
+    fetchOrders(page, initialFilters, search);
+  }, [location.search, dispatch]);
 
   // ✅ Apply Filters → Reset to page 1
   const handleApplyFilters = (appliedFilters: { paymentStatus?: string; course?: string; startDate?: string; endDate?: string; }) => {
@@ -49,13 +75,13 @@ const AllOrders = () => {
     );
     setFilters(validFilters);
     setCurrentPage(1);
-    fetchOrders(1, validFilters, searchTerm);
+    updateURL(1, validFilters, searchTerm);
   };
 
   // ✅ Search → Reset to page 1
   const handleSearch = () => {
     setCurrentPage(1);
-    fetchOrders(1, filters, searchTerm);
+    updateURL(1, filters, searchTerm);
   };
 
   // ✅ Reload → Clear filters + search
@@ -63,7 +89,18 @@ const AllOrders = () => {
     setSearchTerm("");
     setFilters({});
     setCurrentPage(1);
-    fetchOrders(1, {}, "");
+    updateURL(1, {}, "");
+  };
+
+  const updateURL = (page: number, appliedFilters: { paymentStatus?: string; course?: string; startDate?: string; endDate?: string; }, appliedSearch: string) => {
+    const queryParams = new URLSearchParams();
+    if (appliedFilters.paymentStatus) queryParams.set('paymentStatus', appliedFilters.paymentStatus);
+    if (appliedFilters.course) queryParams.set('course', appliedFilters.course);
+    if (appliedFilters.startDate) queryParams.set('startDate', appliedFilters.startDate);
+    if (appliedFilters.endDate) queryParams.set('endDate', appliedFilters.endDate);
+    if (appliedSearch) queryParams.set('search', appliedSearch);
+    queryParams.set('page', String(page));
+    navigate(`${location.pathname}?${queryParams.toString()}`);
   };
 
   // ✅ Navigate to Order Details
@@ -184,7 +221,7 @@ const AllOrders = () => {
         <Pagination
           currentPage={currentPage}
           totalPages={pagination.total}
-          onPageChange={(page) => fetchOrders(page, filters, searchTerm)}
+          onPageChange={(page) => updateURL(page, filters, searchTerm)}
         />
       )}
     </div>

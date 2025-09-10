@@ -5,13 +5,14 @@ import { getAllCourses, deleteCourse } from '../../../redux/slices/course';
 import FilterDropdown from './components/FilterDropdown';
 import { TbPencil, TbTrash } from 'react-icons/tb';
 import { FaSearch } from 'react-icons/fa';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 import Pagination from '../../../utils/Pagination';
 import { IoReload } from "react-icons/io5";
 
 const CourseList = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const dispatch = useDispatch<AppDispatch>();
     const { courses, loading, pagination } = useSelector(
         (state: RootState) => state.course
@@ -26,19 +27,37 @@ const CourseList = () => {
     const fetchCourses = (page = currentPage, appliedFilters = filters, appliedSearch = searchTerm) => {
         setCurrentPage(page);
 
-        const query = new URLSearchParams({
-            ...appliedFilters,
+        const queryParams = new URLSearchParams({
             search: appliedSearch,
             page: String(page),
             limit: String(limit),
-        }).toString();
+        });
 
-        dispatch(getAllCourses(query));
+        if (appliedFilters.category) {
+            queryParams.set('category', appliedFilters.category);
+        }
+
+        if (appliedFilters.mode) {
+            queryParams.set('mode', appliedFilters.mode);
+        }
+
+        dispatch(getAllCourses(queryParams.toString()));
     };
 
     useEffect(() => {
-        fetchCourses(1, filters, searchTerm); // ✅ always start fresh
-    }, []);
+        const params = new URLSearchParams(location.search);
+        const category = params.get('category') || undefined;
+        const mode = params.get('mode') || undefined;
+        const search = params.get('search') || '';
+        const page = parseInt(params.get('page') || '1', 10);
+
+        const initialFilters = { category, mode };
+        setFilters(initialFilters);
+        setSearchTerm(search);
+        setCurrentPage(page);
+
+        fetchCourses(page, initialFilters, search);
+    }, [location.search]);
 
 
     const handleDelete = async (id: string) => {
@@ -61,20 +80,30 @@ const CourseList = () => {
 
         setFilters(validFilters);
         setCurrentPage(1); // ✅ Reset to first page when filters change
-        fetchCourses(1, validFilters, searchTerm);
+        updateURL(1, validFilters, searchTerm);
     };
 
     const handleSearch = () => {
         setCurrentPage(1); // ✅ Reset to first page when search changes
-        fetchCourses(1, filters, searchTerm);
+        updateURL(1, filters, searchTerm);
     };
 
     const handleReload = () => {
         setFilters({});
         setSearchTerm("");
         setCurrentPage(1);
-        fetchCourses(1, {}, "");
+        updateURL(1, {}, "");
     };
+
+    const updateURL = (page: number, appliedFilters: { category?: string; "programs.mode"?: string }, appliedSearch: string) => {
+        const queryParams = new URLSearchParams();
+        if (appliedFilters.category) queryParams.set('category', appliedFilters.category);
+        if (appliedFilters["programs.mode"]) queryParams.set('programs.mode', appliedFilters["programs.mode"]);
+        if (appliedSearch) queryParams.set('search', appliedSearch);
+        queryParams.set('page', String(page));
+        navigate(`${location.pathname}?${queryParams.toString()}`);
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -196,7 +225,7 @@ const CourseList = () => {
                 <Pagination
                     currentPage={currentPage}
                     totalPages={pagination.totalPages}
-                    onPageChange={(page) => fetchCourses(page, filters, searchTerm)} // ✅ keep filters + search
+                    onPageChange={(page) => updateURL(page, filters, searchTerm)} // ✅ keep filters + search
                 />
             }
 

@@ -6,11 +6,13 @@ import FilterDropdown from "../components/FilterDropdown";
 import Pagination from "../../../utils/Pagination";
 import { FaSearch } from "react-icons/fa";
 import { IoReload } from "react-icons/io5";
-import { useNavigate } from "react-router";
-// import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AllPayments = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const { payments, loading, error, pagination } = useSelector(
     (state: RootState) => state.payment
   );
@@ -33,24 +35,49 @@ const AllPayments = () => {
   ) => {
     setCurrentPage(page);
 
-    const query = new URLSearchParams({
-      ...appliedFilters,
+    const queryParams = new URLSearchParams({
       search: appliedSearch,
       page: String(page),
       limit: String(limit),
-    }).toString();
+    });
 
-    dispatch(getAllPayments(query));
+    if (appliedFilters.status) {
+        queryParams.set('status', appliedFilters.status);
+    }
+    if (appliedFilters.method) {
+        queryParams.set('method', appliedFilters.method);
+    }
+    if (appliedFilters.startDate) {
+        queryParams.set('startDate', appliedFilters.startDate);
+    }
+    if (appliedFilters.endDate) {
+        queryParams.set('endDate', appliedFilters.endDate);
+    }
+
+    dispatch(getAllPayments(queryParams.toString()));
   };
 
   // ✅ Initial fetch
   useEffect(() => {
-    fetchPayments(currentPage, filters, searchTerm);
-  }, []);
+    const params = new URLSearchParams(location.search);
+    const status = params.get('status') || undefined;
+    const method = params.get('method') || undefined;
+    const startDate = params.get('startDate') || undefined;
+    const endDate = params.get('endDate') || undefined;
+    const search = params.get('search') || '';
+    const page = parseInt(params.get('page') || '1', 10);
+
+    const initialFilters = { status, method, startDate, endDate };
+    setFilters(initialFilters);
+    setSearchTerm(search);
+    setCurrentPage(page);
+
+    fetchPayments(page, initialFilters, search);
+  }, [location.search, dispatch]);
 
   const handleSearch = () => {
     setCurrentPage(1); // Reset to first page when search changes
-    fetchPayments(1, filters, searchTerm);
+    updateURL(1, filters, searchTerm);
   };
 
   const handleApplyFilters = (appliedFilters: {
@@ -65,17 +92,27 @@ const AllPayments = () => {
 
     setFilters(validFilters);
     setCurrentPage(1); // Reset to first page when filters change
-    fetchPayments(1, validFilters, searchTerm);
+    updateURL(1, validFilters, searchTerm);
   };
 
   const handleReload = () => {
     setFilters({});
     setSearchTerm("");
     setCurrentPage(1);
-    fetchPayments(1, {}, "");
+    updateURL(1, {}, "");
   };
 
-  const navigate = useNavigate();
+  const updateURL = (page: number, appliedFilters: { status?: string; method?: string; startDate?: string; endDate?: string; }, appliedSearch: string) => {
+    const queryParams = new URLSearchParams();
+    if (appliedFilters.status) queryParams.set('status', appliedFilters.status);
+    if (appliedFilters.method) queryParams.set('method', appliedFilters.method);
+    if (appliedFilters.startDate) queryParams.set('startDate', appliedFilters.startDate);
+    if (appliedFilters.endDate) queryParams.set('endDate', appliedFilters.endDate);
+    if (appliedSearch) queryParams.set('search', appliedSearch);
+    queryParams.set('page', String(page));
+    navigate(`${location.pathname}?${queryParams.toString()}`);
+  };
+
   const clickHandler = (id: string) => {
     navigate(`/order/${id}`);
   };
@@ -172,7 +209,7 @@ const AllPayments = () => {
         <Pagination
           currentPage={currentPage}
           totalPages={pagination.total}
-          onPageChange={(page) => fetchPayments(page)} // keeps filters applied
+          onPageChange={(page) => updateURL(page, filters, searchTerm)}
         />
       )}
     </div>

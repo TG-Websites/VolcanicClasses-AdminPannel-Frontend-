@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { FiFilter } from "react-icons/fi";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";
@@ -23,11 +24,25 @@ interface FilterDropdownProps {
   
 
 const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply , onCancel}) => {
+  const location = useLocation();
   const [tempStatus, setTempStatus] = useState("");
   const [tempCourse, setTempCourse] = useState(""); // will store courseId
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [showFilter, setShowFilter] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const status = params.get('status') || '';
+    const courseInterest = params.get('courseInterest') || '';
+    const start = params.get('startDate');
+    const end = params.get('endDate');
+
+    setTempStatus(status);
+    setTempCourse(courseInterest);
+    setStartDate(start ? new Date(start) : null);
+    setEndDate(end ? new Date(end) : null);
+  }, [location.search]);
 
   const handleApply = () => {
     onApply({
@@ -42,6 +57,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply , onCancel}) =>
   const handleCancel = () => {
     setTempStatus("");
     setTempCourse("");
+    setStartDate(null);
+    setEndDate(null);
     setShowFilter(false);
     if (onCancel) onCancel(); 
   };

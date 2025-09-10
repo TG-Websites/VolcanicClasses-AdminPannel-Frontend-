@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { FiFilter } from "react-icons/fi";
 
 interface FilterDropdownProps {
@@ -10,9 +11,18 @@ interface FilterDropdownProps {
 }
 
 const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply, onCancel }) => {
+  const location = useLocation();
   const [tempCategory, setTempCategory] = useState("");
   const [tempMode, setTempMode] = useState("");
   const [showFilter, setShowFilter] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const category = params.get('category') || '';
+    const mode = params.get('programs.mode') || '';
+    setTempCategory(category);
+    setTempMode(mode);
+  }, [location.search]);
 
   const handleApply = () => {
     onApply({
@@ -54,7 +64,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ onApply, onCancel }) =>
               <option value="">All</option>
               <option value="JEE">JEE</option>
               <option value="NEET">NEET</option>
-              <option value="board">11 & 12 Board</option>
+              <option value="Boards">11 & 12 Board</option>
             </select>
           </div>
 

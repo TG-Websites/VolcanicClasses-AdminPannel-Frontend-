@@ -7,10 +7,13 @@ import { FiTrash2 } from "react-icons/fi";
 import FilterDropdown from "../components/FilterDropdown";
 import toast from 'react-hot-toast';
 import Pagination from "../../../utils/Pagination";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 const AllMedia = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { mediaList, pagination, loading } = useSelector((state: RootState) => state.media);
   const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(5); // fixed
@@ -20,19 +23,32 @@ const AllMedia = () => {
   const fetchMedia = (page = currentPage, appliedFilters = filters, appliedSearch = searchTerm) => {
     setCurrentPage(page);
 
-    const query = new URLSearchParams({
-      ...appliedFilters,
+    const queryParams = new URLSearchParams({
       search: appliedSearch,
       page: String(page),
       limit: String(limit),
-    }).toString();
+    });
 
-    dispatch(getAllMedia(query));
+    if (appliedFilters.type) {
+        queryParams.set('type', appliedFilters.type);
+    }
+
+    dispatch(getAllMedia(queryParams.toString()));
   };
 
   useEffect(() => {
-    fetchMedia(1, filters, searchTerm);
-  }, []);
+    const params = new URLSearchParams(location.search);
+    const type = params.get('type') || undefined;
+    const search = params.get('search') || '';
+    const page = parseInt(params.get('page') || '1', 10);
+
+    const initialFilters = { type };
+    setFilters(initialFilters);
+    setSearchTerm(search);
+    setCurrentPage(page);
+
+    fetchMedia(page, initialFilters, search);
+  }, [location.search, dispatch]);
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
@@ -50,19 +66,27 @@ const AllMedia = () => {
     );
     setFilters(validFilters);
     setCurrentPage(1); // ✅ reset page
-    fetchMedia(1, validFilters, searchTerm);
+    updateURL(1, validFilters, searchTerm);
   };
 
   const handleSearch = () => {
     setCurrentPage(1); // ✅ reset page
-    fetchMedia(1, filters, searchTerm);
+    updateURL(1, filters, searchTerm);
   };
 
   const handleReload = () => {
     setFilters({});
     setSearchTerm("");
     setCurrentPage(1);
-    fetchMedia(1, {}, "");
+    updateURL(1, {}, "");
+  };
+
+  const updateURL = (page: number, appliedFilters: { type?: string }, appliedSearch: string) => {
+    const queryParams = new URLSearchParams();
+    if (appliedFilters.type) queryParams.set('type', appliedFilters.type);
+    if (appliedSearch) queryParams.set('search', appliedSearch);
+    queryParams.set('page', String(page));
+    navigate(`${location.pathname}?${queryParams.toString()}`);
   };
 
 
@@ -173,7 +197,7 @@ const AllMedia = () => {
         <Pagination
           currentPage={currentPage}
           totalPages={pagination.total}
-          onPageChange={(page) => fetchMedia(page, filters, searchTerm)} // ✅ keep search + filters
+          onPageChange={(page) => updateURL(page, filters, searchTerm)} // ✅ keep search + filters
         />
       )}
 
