@@ -4,6 +4,7 @@ import { CourseFormValues } from '../types';
 import CollapsibleSection from './CollapsibleSection';
 
 const CTASection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => {
+  console.log(formik)
   return (
     <CollapsibleSection title="Call to Action">
       <div className="space-y-4">
@@ -38,7 +39,7 @@ const CTASection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => {
         {formik.values.showBrochureButton && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Brochure File URL
+              Brochure File URL*
             </label>
             <input
               type="url"
@@ -48,6 +49,9 @@ const CTASection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="https://example.com/brochure.pdf"
             />
+            {formik.touched.brochureUrl && formik.errors.brochureUrl && (
+              <p className="mt-1 text-sm text-red-600">{formik.errors.brochureUrl}</p>
+            )}
           </div>
         )}
       </div>

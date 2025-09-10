@@ -1,5 +1,4 @@
-// SEOSection.tsx
-import { FormikProps } from 'formik';
+import { FormikProps, getIn } from 'formik';
 import { CourseFormValues } from '../types';
 import CollapsibleSection from './CollapsibleSection';
 
@@ -7,33 +6,46 @@ const SEOSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => {
   return (
     <CollapsibleSection title="SEO & Publishing">
       <div className="space-y-4">
+        {/* Meta Title */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Meta Title
+            Meta Title <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
             name="metaTitle"
             value={formik.values.metaTitle}
             onChange={formik.handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onBlur={formik.handleBlur}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${getIn(formik.touched, 'metaTitle') && getIn(formik.errors, 'metaTitle')
+                ? 'border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-blue-500'
+              }`}
             placeholder="Best JEE Physics Course | Exam Preparation"
             maxLength={60}
           />
           <p className="mt-1 text-xs text-gray-500">
             Recommended: 50-60 characters ({formik.values.metaTitle?.length || 0}/60)
           </p>
+          {getIn(formik.touched, 'metaTitle') && getIn(formik.errors, 'metaTitle') && (
+            <p className="mt-1 text-sm text-red-600">{getIn(formik.errors, 'metaTitle')}</p>
+          )}
         </div>
 
+        {/* Meta Description */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Meta Description
+            Meta Description <span className="text-red-500">*</span>
           </label>
           <textarea
             name="metaDescription"
             value={formik.values.metaDescription}
             onChange={formik.handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onBlur={formik.handleBlur}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${getIn(formik.touched, 'metaDescription') && getIn(formik.errors, 'metaDescription')
+                ? 'border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-blue-500'
+              }`}
             placeholder="Comprehensive JEE Physics course covering all topics with expert faculty..."
             rows={3}
             maxLength={160}
@@ -41,11 +53,18 @@ const SEOSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => {
           <p className="mt-1 text-xs text-gray-500">
             Recommended: 150-160 characters ({formik.values.metaDescription?.length || 0}/160)
           </p>
+          {getIn(formik.touched, 'metaDescription') &&
+            getIn(formik.errors, 'metaDescription') && (
+              <p className="mt-1 text-sm text-red-600">
+                {getIn(formik.errors, 'metaDescription')}
+              </p>
+            )}
         </div>
 
+        {/* Meta Keywords */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Meta Keywords
+            Meta Keywords <span className="text-red-500">*</span>
           </label>
           <div className="space-y-2">
             {formik.values.metaKeywords.map((keyword, index) => (
@@ -58,14 +77,21 @@ const SEOSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => {
                     updatedKeywords[index] = e.target.value;
                     formik.setFieldValue('metaKeywords', updatedKeywords);
                   }}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onBlur={formik.handleBlur}
+                  className={`flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${getIn(formik.touched, `metaKeywords.${index}`) &&
+                      getIn(formik.errors, `metaKeywords.${index}`)
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-gray-300 focus:ring-blue-500'
+                    }`}
                   placeholder={`Keyword ${index + 1}`}
                 />
                 {formik.values.metaKeywords.length > 1 && (
                   <button
                     type="button"
                     onClick={() => {
-                      const updatedKeywords = formik.values.metaKeywords.filter((_, i) => i !== index);
+                      const updatedKeywords = formik.values.metaKeywords.filter(
+                        (_, i) => i !== index
+                      );
                       formik.setFieldValue('metaKeywords', updatedKeywords);
                     }}
                     className="p-2 text-red-500 hover:text-red-700"
@@ -86,9 +112,18 @@ const SEOSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => {
                 )}
               </div>
             ))}
+            {/* Show group-level error if array invalid */}
+            {getIn(formik.touched, 'metaKeywords') &&
+              typeof getIn(formik.errors, 'metaKeywords') === 'string' && (
+                <p className="mt-1 text-sm text-red-600">
+                  {getIn(formik.errors, 'metaKeywords')}
+                </p>
+              )}
             <button
               type="button"
-              onClick={() => formik.setFieldValue('metaKeywords', [...formik.values.metaKeywords, ''])}
+              onClick={() =>
+                formik.setFieldValue('metaKeywords', [...formik.values.metaKeywords, ''])
+              }
               className="flex items-center text-sm text-blue-600 hover:text-blue-800 mt-2"
             >
               <svg
@@ -108,7 +143,7 @@ const SEOSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => {
           </div>
         </div>
 
-
+        {/* Publish Checkbox */}
         <div className="flex items-center pt-2">
           <input
             type="checkbox"

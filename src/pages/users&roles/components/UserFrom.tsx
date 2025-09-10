@@ -42,7 +42,7 @@ const UserForm = ({ initialValues, isEditMode = false, onSubmit }: UserFormProps
           {/* Name */}
           <div>
             <label htmlFor="name" className="block font-medium mb-1 flex items-center gap-2">
-              <FiUser /> Name
+              <FiUser /> Name*
             </label>
             <Field
               type="text"
@@ -56,13 +56,13 @@ const UserForm = ({ initialValues, isEditMode = false, onSubmit }: UserFormProps
           {/* Email */}
           <div>
             <label htmlFor="email" className="block font-medium mb-1 flex items-center gap-2">
-              <FiMail /> Email
+              <FiMail /> Email*
             </label>
             <Field
               type="email"
               name="email"
               placeholder="Enter email address"
-            className="mt-1 block w-full border border-gray-300 dark:border-gray-600 outline-none dark:bg-gray-700 rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-600 outline-none dark:bg-gray-700 rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             />
             <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
           </div>
@@ -70,8 +70,8 @@ const UserForm = ({ initialValues, isEditMode = false, onSubmit }: UserFormProps
           {/* Password (only in create mode) */}
           {!isEditMode && (
             <div>
-              <label htmlFor="password" className="block font-medium mb-1 flex items-center gap-2">
-                <FiLock /> Password
+              <label htmlFor="password" className=" font-medium mb-1 flex items-center gap-2">
+                <FiLock /> Password*
               </label>
               <Field
                 type="password"
@@ -91,7 +91,7 @@ const UserForm = ({ initialValues, isEditMode = false, onSubmit }: UserFormProps
             <Field
               as="select"
               name="role"
-             className="mt-1 block w-full border border-gray-300 dark:border-gray-600 outline-none dark:bg-gray-700 rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-600 outline-none dark:bg-gray-700 rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
             >
               <option value="">Select role</option>
               <option value="telecaller">Telecaller</option>

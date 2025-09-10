@@ -19,6 +19,7 @@ import { AppDispatch } from '../../../redux/store';
 import { createCourse } from '../../../redux/slices/course';
 import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
+import { courseValidationSchema } from './validationSchema';
 
 const CreateCourseForm = () => {
   const initialValues: CourseFormValues = {
@@ -96,7 +97,7 @@ const CreateCourseForm = () => {
   const navigate = useNavigate()
   const formik = useFormik({
     initialValues,
-    // validationSchema: courseValidationSchema,
+    validationSchema: courseValidationSchema,
     onSubmit: async (values) => {
       const result = await dispatch(createCourse(values));
       if (createCourse.fulfilled.match(result)) {

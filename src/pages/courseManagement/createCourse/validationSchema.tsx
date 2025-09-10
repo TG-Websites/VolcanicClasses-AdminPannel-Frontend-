@@ -1,4 +1,3 @@
-// validationSchema.ts
 import * as Yup from 'yup';
 
 export const courseValidationSchema = Yup.object().shape({
@@ -18,7 +17,8 @@ export const courseValidationSchema = Yup.object().shape({
     .typeError('Years must be a number')
     .min(0)
     .required('Years of Excellence is required'),
-  bannerImage: Yup.mixed().nullable(),
+
+  bannerImageUrl: Yup.mixed().required('bannerImage is required'),
 
   floatingHighlights: Yup.array()
     .of(Yup.string().required('Highlight cannot be empty'))
@@ -33,18 +33,26 @@ export const courseValidationSchema = Yup.object().shape({
   topicBreakdown: Yup.array().of(
     Yup.object().shape({
       topic: Yup.string().required('Topic is required'),
-      percentage: Yup.string().required('Percentage is required'),
+      percentage: Yup.number()
+        .typeError('Percentage must be a number')
+        .min(0)
+        .max(100)
+        .required('Percentage is required'),
     })
   ),
 
   programs: Yup.array().of(
     Yup.object().shape({
-      mode: Yup.string().required(),
+      mode: Yup.string().required('Mode is required'),
       title: Yup.string().required('Program title is required'),
       description: Yup.string().required('Program description is required'),
-      price: Yup.number().required('Price is required'),
+      price: Yup.number()
+        .typeError('Price must be a number')
+        .required('Price is required'),
       priceLabel: Yup.string().required('Price label is required'),
-      features: Yup.array().of(Yup.string().required('Feature cannot be empty')),
+      features: Yup.array().of(
+        Yup.string().required('Feature cannot be empty')
+      ),
     })
   ),
 
@@ -69,7 +77,7 @@ export const courseValidationSchema = Yup.object().shape({
       designation: Yup.string().required('Designation is required'),
       bio: Yup.string().required('Bio is required'),
       expertise: Yup.array().of(Yup.string().required('Expertise required')),
-      photo: Yup.mixed().nullable(),
+      photoUrl: Yup.mixed().required('Faculty Imaage is required '),
     })
   ),
 
@@ -79,22 +87,25 @@ export const courseValidationSchema = Yup.object().shape({
       scoreSummary: Yup.string().required('Score summary is required'),
       subjectScore: Yup.string().required('Subject score is required'),
       quote: Yup.string().required('Quote is required'),
-      photo: Yup.mixed().nullable(),
+      photoUrl: Yup.mixed().required('testimonial image is required'),
     })
   ),
 
   showTrialButton: Yup.boolean(),
   showBrochureButton: Yup.boolean(),
   brochureUrl: Yup.string().when('showBrochureButton', {
-  is: true,
-  then: (schema) =>
-    schema
-      .required('Brochure URL is required')
-      .url('Brochure URL must be a valid URL'),
-  otherwise: (schema) => schema.notRequired(),
-}),
+    is: true,
+    then: (schema) =>
+      schema
+        .required('Brochure URL is required')
+        .url('Brochure URL must be a valid URL'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+
   metaTitle: Yup.string().required('Meta title is required'),
-  // metaDescription: Yup.string().required('Meta description is required'),
-  metaKeywords: Yup.string().required('Meta keywords are required'),
+  metaDescription: Yup.string().required('Meta description is required'),
+  metaKeywords: Yup.array()
+    .of(Yup.string().required('Keyword cannot be empty'))
+    .min(1, 'At least 1 keyword is required'),
   isPublished: Yup.boolean(),
 });

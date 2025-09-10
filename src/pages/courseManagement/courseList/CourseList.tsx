@@ -123,6 +123,7 @@ const CourseList = () => {
                             <th className="py-3 px-4 font-semibold text-left">Course</th>
                             <th className="py-3 px-4 font-semibold text-left">Title</th>
                             <th className="py-3 px-4 font-semibold text-left">Price</th>
+                            <th className="py-3 px-4 font-semibold text-left">Status</th>
                             <th className="py-3 px-4 font-semibold text-left">Edit</th>
                             <th className="py-3 px-4 font-semibold text-left">Delete</th>
                         </tr>
@@ -166,6 +167,9 @@ const CourseList = () => {
                                     <td className="py-3 px-4">{course.title}</td>
                                     <td className="py-3 px-4">
                                         ₹{course.programs[0]?.price?.toFixed(2) ?? 'N/A'}
+                                    </td>
+                                    <td className="py-3 px-4">
+                                        {course.isPublished ? <span className='bg-green-400 rounded-md p-2 text-white'>published</span> : <span className='bg-red-400 rounded-md p-2 text-white'>unpublished</span>}
                                     </td>
                                     <td className="py-3 px-4">
                                         <TbPencil

@@ -132,15 +132,15 @@ export interface Order {
   createdAt: string;
   __v: number;
   dueAmount: number;
-  paymentMode:string;
-  dueAmountTrack:DueAmountTrack[];
+  paymentMode: string;
+  razorpayOrderId: string;
+  dueAmountTrack: DueAmountTrack[];
 }
 
-interface DueAmountTrack
-{
-  _id:string
-  amount:number;
-  submitted:string;
+interface DueAmountTrack {
+  _id: string
+  amount: number;
+  submitted: string;
 }
 
 // -------- Pagination --------
@@ -169,8 +169,8 @@ const initialState: OrderState = {
   pagination: { total: 0, page: 1, limit: 10 },
 };
 
-interface updateOrderPayload  {
-  paidAmount:string;
+interface updateOrderPayload {
+  paidAmount: string;
 }
 
 // Utility to handle Axios errors
@@ -215,12 +215,12 @@ export const getOrderById = createAsyncThunk<Order, string, { rejectValue: strin
 export const updateOrder = createAsyncThunk(
   'order/updateOrder',
   async (
-    { id, orderData }: { id: string; orderData:updateOrderPayload },
+    { id, orderData }: { id: string; orderData: updateOrderPayload },
     { rejectWithValue }
   ) => {
     try {
       const response = await axiosInstance.put(`/api/orders/${id}`, orderData);
-       toast.success("Student Updation Successful ");
+      toast.success("Student Updation Successful ");
       return response.data;
     } catch (err: unknown) {
       return rejectWithValue(handleAxiosError(err, 'Course update failed'));

@@ -44,13 +44,13 @@ const ScheduleClassForm: React.FC<ScheduleClassFormProps> = ({
           <Form className="w-full grid grid-cols-1 md:grid-cols-2 gap-6  dark:text-gray-300">
             {/* Course ID */}
             <div className="col-span-1">
-              <CourseDropdown/>
-              <ErrorMessage name="course" component="div" className="text-red-500 text-sm mt-1" />
+              <CourseDropdown />
+
             </div>
 
             {/* Instructor Name*/}
             <div className="col-span-1">
-              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Instructor Name</label>
+              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Instructor Name*</label>
               <Field
                 name="instructor"
                 className="mt-1 block w-full border border-gray-300 dark:border-gray-600 outline-none dark:bg-gray-700 rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
@@ -61,7 +61,7 @@ const ScheduleClassForm: React.FC<ScheduleClassFormProps> = ({
 
             {/* Date */}
             <div className="col-span-1">
-              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Date</label>
+              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Date*</label>
 
               <Field name="date">
                 {({ field, form }: FieldProps) => (
@@ -88,7 +88,7 @@ const ScheduleClassForm: React.FC<ScheduleClassFormProps> = ({
 
             {/* Time */}
             <div className="col-span-1">
-              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Time</label>
+              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Time*</label>
               <Field
                 type="text"
                 name="time"
@@ -100,7 +100,7 @@ const ScheduleClassForm: React.FC<ScheduleClassFormProps> = ({
 
             {/* Mode */}
             <div className="col-span-1">
-              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Mode</label>
+              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Mode*</label>
               <Field
                 as="select"
                 name="mode"
@@ -116,7 +116,7 @@ const ScheduleClassForm: React.FC<ScheduleClassFormProps> = ({
 
             {/* Meeting Link */}
             <div className="col-span-1">
-              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Meeting Link</label>
+              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">Meeting Link*</label>
               <Field
                 name="link"
                 className="mt-1 block w-full border border-gray-300 dark:border-gray-600 outline-none dark:bg-gray-700 rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"

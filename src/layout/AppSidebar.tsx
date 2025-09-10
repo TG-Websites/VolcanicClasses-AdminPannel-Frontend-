@@ -20,6 +20,7 @@ import {
 import { useSidebar } from "../context/SidebarContext";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 
 type NavItem = {
@@ -34,9 +35,9 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
-    icon: <FontAwesomeIcon icon={faChartLine} />,
+    icon: <FontAwesomeIcon icon={faChartLine as IconProp} />,
     name: "Dashboard",
-    roles: ["admin", "manager", "telecaller","user"],
+    roles: ["admin", "manager", "telecaller", "user"],
     subItems: [{ name: "Dashboard", path: "/", pro: false }],
   },
   {
@@ -46,15 +47,15 @@ const navItems: NavItem[] = [
     subItems: [{ name: "Add Course", path: "/course/add", pro: false }, { name: "All Course", path: "/course/list", pro: false }],
   },
   {
-    icon:  <PiStudentFill  />,
+    icon: <PiStudentFill />,
     name: "Offline Admissions",
     roles: ["admin", "manager"],
     subItems: [{ name: "Admission", path: "/admission/manual", pro: false }],
   },
   {
-    icon:  <FontAwesomeIcon icon={faGraduationCap} size="2x" />,
+    icon: <FontAwesomeIcon icon={faGraduationCap as IconProp} size="2x" />,
     name: "Admissions",
-    roles: ["admin", "manager","telecaller"],
+    roles: ["admin", "manager", "telecaller"],
     subItems: [{ name: "Inquiries", path: "/admission/inquiries", pro: false }, { name: "Manual Entry", path: "/admission/manual-entry", pro: false }],
   },
   {
@@ -70,7 +71,7 @@ const navItems: NavItem[] = [
     subItems: [{ name: "Calendar View", path: "/live-classes/calendar", pro: false }, { name: "Schedule Class", path: "/live-classes/create", pro: false }],
   },
   {
-    icon: <FontAwesomeIcon icon={faBullhorn} />,
+    icon: <FontAwesomeIcon icon={faBullhorn as IconProp} />,
     name: "Announcement",
     roles: ["admin", "manager"],
     subItems: [{ name: "Announcements", path: "/announcements", pro: false }, { name: "Create Announcements", path: "/announcements/create", pro: false }],
@@ -88,13 +89,13 @@ const navItems: NavItem[] = [
     subItems: [{ name: "Student List", path: "/admin/students", pro: false }],
   },
   {
-    icon: <FontAwesomeIcon icon={faCartShopping} />,
+    icon: <FontAwesomeIcon icon={faCartShopping as IconProp} />,
     name: "Orders",
     roles: ["admin"],
     subItems: [{ name: "Orders", path: "/orders", pro: false }],
   },
   {
-    icon: <FontAwesomeIcon icon={faCreditCard} />,
+    icon: <FontAwesomeIcon icon={faCreditCard as IconProp} />,
     name: "Payments",
     roles: ["admin"],
     subItems: [{ name: "Payments", path: "/payments", pro: false }],
@@ -183,33 +184,33 @@ const AppSidebar: React.FC = () => {
     [location.pathname]
   );
 
-// Track whether we've already auto-expanded once
-const [hasInitialized, setHasInitialized] = useState(false);
+  // Track whether we've already auto-expanded once
+  const [hasInitialized, setHasInitialized] = useState(false);
 
-useEffect(() => {
-  if (hasInitialized) return; // ✅ don't force open after first load
+  useEffect(() => {
+    if (hasInitialized) return; // ✅ don't force open after first load
 
-  let submenuMatched = false;
-  ["main", "others"].forEach((menuType) => {
-    const items = menuType === "main" ? navItems : othersItems;
-    items.forEach((nav, index) => {
-      if (nav.subItems) {
-        nav.subItems.forEach((subItem) => {
-          if (isActive(subItem.path)) {
-            setOpenSubmenu({ type: menuType as "main" | "others", index });
-            submenuMatched = true;
-          }
-        });
-      }
+    let submenuMatched = false;
+    ["main", "others"].forEach((menuType) => {
+      const items = menuType === "main" ? navItems : othersItems;
+      items.forEach((nav, index) => {
+        if (nav.subItems) {
+          nav.subItems.forEach((subItem) => {
+            if (isActive(subItem.path)) {
+              setOpenSubmenu({ type: menuType as "main" | "others", index });
+              submenuMatched = true;
+            }
+          });
+        }
+      });
     });
-  });
 
-  if (!submenuMatched) {
-    setOpenSubmenu(null);
-  }
+    if (!submenuMatched) {
+      setOpenSubmenu(null);
+    }
 
-  setHasInitialized(true); // ✅ prevent re-running auto expand
-}, [location, isActive, hasInitialized]);
+    setHasInitialized(true); // ✅ prevent re-running auto expand
+  }, [location, isActive, hasInitialized]);
 
   useEffect(() => {
     if (openSubmenu !== null) {

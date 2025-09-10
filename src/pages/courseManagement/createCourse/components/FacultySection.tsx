@@ -1,4 +1,4 @@
-import { FormikProps } from 'formik';
+import { FormikProps, getIn } from 'formik';
 import { useState, useEffect } from 'react';
 import { CourseFormValues } from '../types';
 import CollapsibleSection from './CollapsibleSection';
@@ -9,14 +9,14 @@ import { uploadImage, resetImageState } from '../../../../redux/slices/cloudinar
 const FacultySection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => {
   const facultyMembers = formik.values.faculty || [];
   const dispatch = useDispatch<AppDispatch>();
-  const { url, uploading } = useSelector((state: RootState) => state.cloudinary);
+  const { url, key, uploading } = useSelector((state: RootState) => state.cloudinary);
 
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
 
   const handleAddFaculty = () => {
     formik.setFieldValue('faculty', [
       ...facultyMembers,
-      { name: '', designation: '', bio: '', expertise: [], photo: null },
+      { name: '', designation: '', bio: '', expertise: [''], photoUrl: null },
     ]);
   };
 
@@ -57,12 +57,12 @@ const FacultySection = ({ formik }: { formik: FormikProps<CourseFormValues> }) =
     const file = e.target.files?.[0];
     if (!file) return;
     setUploadingIndex(index);
-    dispatch(uploadImage(file));
+    dispatch(uploadImage({ file, key: "faculty" }));
   };
 
   // After upload completes, update the faculty's photo
   useEffect(() => {
-    if (url !== null && uploadingIndex !== null) {
+    if (url !== null && key !== null && key === 'faculty' && uploadingIndex !== null) {
       const newFaculty = [...facultyMembers];
       newFaculty[uploadingIndex].photoUrl = url;
       formik.setFieldValue('faculty', newFaculty);
@@ -77,62 +77,107 @@ const FacultySection = ({ formik }: { formik: FormikProps<CourseFormValues> }) =
         {facultyMembers.map((faculty, index) => (
           <div key={index} className="border border-gray-200 rounded-lg p-4 relative">
             <div className="space-y-4">
+              {/* Name + Designation */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Faculty Name*</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Faculty Name<span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     value={faculty.name}
                     onChange={(e) => handleFacultyChange(index, 'name', e.target.value)}
                     className="w-full px-3 py-2 border rounded-md"
                     placeholder="Dr. John Doe"
-                    required
                   />
+                  {getIn(formik.touched, `faculty.${index}.name`) &&
+                    getIn(formik.errors, `faculty.${index}.name`) && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {getIn(formik.errors, `faculty.${index}.name`)}
+                      </p>
+                    )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Designation*</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Designation<span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     value={faculty.designation}
                     onChange={(e) => handleFacultyChange(index, 'designation', e.target.value)}
                     className="w-full px-3 py-2 border rounded-md"
                     placeholder="Senior Physics Professor"
-                    required
                   />
+                  {getIn(formik.touched, `faculty.${index}.designation`) &&
+                    getIn(formik.errors, `faculty.${index}.designation`) && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {getIn(formik.errors, `faculty.${index}.designation`)}
+                      </p>
+                    )}
                 </div>
               </div>
 
+              {/* Bio */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Bio / Experience Summary*</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Bio / Experience Summary<span className="text-red-500">*</span>
+                </label>
                 <textarea
                   value={faculty.bio}
                   onChange={(e) => handleFacultyChange(index, 'bio', e.target.value)}
                   className="w-full px-3 py-2 border rounded-md"
                   placeholder="Summary of qualifications and experience..."
                   rows={3}
-                  required
                 />
+                {getIn(formik.touched, `faculty.${index}.bio`) &&
+                  getIn(formik.errors, `faculty.${index}.bio`) && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {getIn(formik.errors, `faculty.${index}.bio`)}
+                    </p>
+                  )}
               </div>
 
+              {/* Expertise */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Expertise Areas</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Expertise Areas<span className="text-red-500">*</span>
+                </label>
                 <div className="space-y-2">
                   {faculty.expertise.map((exp, expIndex) => (
-                    <div key={expIndex} className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        value={exp}
-                        onChange={(e) => handleExpertiseChange(index, expIndex, e.target.value)}
-                        className="flex-1 px-3 py-2 border rounded-md"
-                        placeholder="e.g. Quantum Mechanics"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveExpertise(index, expIndex)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        Remove
-                      </button>
+                    <div key={expIndex}>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={exp}
+                          onChange={(e) =>
+                            handleExpertiseChange(index, expIndex, e.target.value)
+                          }
+                          className="flex-1 px-3 py-2 border rounded-md"
+                          placeholder="e.g. Quantum Mechanics"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveExpertise(index, expIndex)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      {getIn(
+                        formik.touched,
+                        `faculty.${index}.expertise.${expIndex}`
+                      ) &&
+                        getIn(
+                          formik.errors,
+                          `faculty.${index}.expertise.${expIndex}`
+                        ) && (
+                          <p className="mt-1 text-sm text-red-600">
+                            {getIn(
+                              formik.errors,
+                              `faculty.${index}.expertise.${expIndex}`
+                            )}
+                          </p>
+                        )}
                     </div>
                   ))}
                   <button
@@ -145,8 +190,11 @@ const FacultySection = ({ formik }: { formik: FormikProps<CourseFormValues> }) =
                 </div>
               </div>
 
+              {/* Photo */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Faculty Photo</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Faculty Photo<span className="text-red-500">*</span>
+                </label>
                 <input
                   type="file"
                   accept="image/*"
@@ -166,6 +214,12 @@ const FacultySection = ({ formik }: { formik: FormikProps<CourseFormValues> }) =
                     />
                   </div>
                 )}
+                {getIn(formik.touched, `faculty.${index}.photoUrl`) &&
+                  getIn(formik.errors, `faculty.${index}.photoUrl`) && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {getIn(formik.errors, `faculty.${index}.photoUrl`)}
+                    </p>
+                  )}
               </div>
             </div>
 

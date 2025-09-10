@@ -9,7 +9,8 @@ export interface Payment {
   status: string;
   order: {
     paymentId: string
-    _id:string
+    razorpayOrderId: string
+    _id: string
   };
   transactionId: string;
   amount: number;
@@ -84,7 +85,7 @@ export const getPaymentById = createAsyncThunk<
   { rejectValue: string }
 >(
   'payments/getById',
-  async (id:string, { rejectWithValue }) => {
+  async (id: string, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.get<{ data: Payment }>(`/api/payments/${id}`);
       return res.data.data;

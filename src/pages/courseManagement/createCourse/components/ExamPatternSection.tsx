@@ -9,7 +9,7 @@ const ExamPatternSection = ({ formik }: { formik: FormikProps<CourseFormValues> 
       <div className="space-y-4">
         {/* Question Format */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Question Format</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Question Format*</label>
           <input
             type="text"
             name="examPattern.questionFormat"
@@ -19,11 +19,14 @@ const ExamPatternSection = ({ formik }: { formik: FormikProps<CourseFormValues> 
             placeholder="e.g., Multiple Choice Questions (MCQs)"
           />
           <p className="mt-1 text-xs text-gray-500">Describe the type of questions in the exam</p>
+          {formik.touched.examPattern?.questionFormat && formik.errors.examPattern?.questionFormat && (
+            <p className="mt-1 text-sm text-red-600">{formik.errors.examPattern?.questionFormat}</p>
+          )}
         </div>
 
         {/* Exam Duration */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Exam Duration</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Exam Duration*</label>
           <input
             type="text"
             name="examPattern.duration"
@@ -33,11 +36,14 @@ const ExamPatternSection = ({ formik }: { formik: FormikProps<CourseFormValues> 
             placeholder="e.g., 3 hours"
           />
           <p className="mt-1 text-xs text-gray-500">Total time allotted for the exam</p>
+          {formik.touched.examPattern?.duration && formik.errors.examPattern?.duration && (
+            <p className="mt-1 text-sm text-red-600">{formik.errors.examPattern?.duration}</p>
+          )}
         </div>
 
         {/* Marking System */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Marking System</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Marking System*</label>
           <input
             type="text"
             name="examPattern.markingSystem"
@@ -47,6 +53,9 @@ const ExamPatternSection = ({ formik }: { formik: FormikProps<CourseFormValues> 
             placeholder="e.g., +4 for correct, -1 for wrong"
           />
           <p className="mt-1 text-xs text-gray-500">Scoring pattern including negative marking</p>
+          {formik.touched.examPattern?.markingSystem && formik.errors.examPattern?.markingSystem && (
+            <p className="mt-1 text-sm text-red-600">{formik.errors.examPattern?.markingSystem}</p>
+          )}
         </div>
       </div>
     </CollapsibleSection>

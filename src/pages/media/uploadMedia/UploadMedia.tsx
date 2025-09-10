@@ -264,26 +264,7 @@ const MediaUpload = () => {
         )}
       </div>
 
-      {/* Image Upload */}
-      <div>
-        <label htmlFor="file" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-          Image
-        </label>
-        <input
-          id="file"
-          name="file"
-          type="file"
-          accept="image/*"
-          onChange={(event) => {
-            const file = event.currentTarget.files?.[0] || null;
-            formik.setFieldValue("file", file);
-          }}
-         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500 dark:focus:ring-brand-500 dark:bg-gray-700 dark:text-white"
-        />
-        {formik.touched.file && formik.errors.file && (
-          <div className="text-red-500 dark:text-red-400 text-xs mt-1">{formik.errors.file}</div>
-        )}
-      </div>
+
 
       {/* Type */}
       <div>
@@ -305,6 +286,26 @@ const MediaUpload = () => {
         </select>
         {formik.touched.type && formik.errors.type && (
           <div className="text-red-500 dark:text-red-400 text-xs mt-1">{formik.errors.type}</div>
+        )}
+      </div>
+      {/* Image Upload */}
+      <div>
+        <label htmlFor="file" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          {formik.values.type.charAt(0).toUpperCase() + formik.values.type.slice(1)}*
+        </label>
+        <input
+          id="file"
+          name="file"
+          type="file"
+          accept={formik.values.type === 'image' ? 'image/*' : formik.values.type === 'video' ? 'video/*' : formik.values.type === 'pdf' ? '.pdf' : '.doc,.docx,.xls,.xlsx'}
+          onChange={(event) => {
+            const file = event.currentTarget.files?.[0] || null;
+            formik.setFieldValue("file", file);
+          }}
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500 dark:focus:ring-brand-500 dark:bg-gray-700 dark:text-white"
+        />
+        {formik.touched.file && formik.errors.file && (
+          <div className="text-red-500 dark:text-red-400 text-xs mt-1">{formik.errors.file}</div>
         )}
       </div>
 

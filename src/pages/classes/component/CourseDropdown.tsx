@@ -16,7 +16,7 @@ const CourseDropdown: React.FC = () => {
   return (
     <div>
       <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-        Course
+        Course*
       </label>
 
       {loading ? (

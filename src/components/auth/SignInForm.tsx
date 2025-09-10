@@ -1,10 +1,10 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { AppDispatch, RootState } from '../../redux/store';
 import { login } from '../../redux/slices/auth';
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 import { Eye, EyeOff } from "lucide-react";
 
 
@@ -19,12 +19,12 @@ const SignInForm: React.FC = () => {
   const { loading, error } = useSelector((state: RootState) => state.auth);
 
 
-const handleSubmit = async (values: { email: string; password: string }) => {
-  const resultAction = await dispatch(login(values));
-  if (login.fulfilled.match(resultAction)) {
-    window.location.href = '/';
-  }
-};
+  const handleSubmit = async (values: { email: string; password: string }) => {
+    const resultAction = await dispatch(login(values));
+    if (login.fulfilled.match(resultAction)) {
+      window.location.href = '/';
+    }
+  };
 
 
   return (
@@ -36,7 +36,7 @@ const handleSubmit = async (values: { email: string; password: string }) => {
           {error && <div className="text-red-500">{error}</div>}
         </div>
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ email: 'admin@example.com', password: 'password123' }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
@@ -67,7 +67,7 @@ const handleSubmit = async (values: { email: string; password: string }) => {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4 top-2 cursor-pointer text-black"
                   >
-                    {showPassword ? < EyeOff className='text-gray-600 dark:text-gray-200 w-4'/> : < Eye  className='text-gray-600 dark:text-gray-200 w-4'/>}
+                    {showPassword ? < EyeOff className='text-gray-600 dark:text-gray-200 w-4' /> : < Eye className='text-gray-600 dark:text-gray-200 w-4' />}
                   </span>
                 </div>
                 <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />

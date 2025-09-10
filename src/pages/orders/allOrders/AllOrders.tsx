@@ -154,7 +154,7 @@ const AllOrders = () => {
                       <FaUser className="text-brand-500 dark:text-white cursor-pointer" />
                     </div>
                     <span
-                      className="cursor-pointer"
+                      className="cursor-pointer hover:underline"
                       onClick={() => clickHandler(order._id)}
                     >
                       {order?.user?.name}

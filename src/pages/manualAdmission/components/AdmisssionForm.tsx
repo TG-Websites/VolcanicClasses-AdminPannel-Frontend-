@@ -28,7 +28,7 @@ export const studentEnrollmentSchema = Yup.object().shape({
     .required("Mobile number is required"),
   paidAmount: Yup.number()
     .typeError("Paid amount must be a number")
-    .min(0, "Paid amount cannot be negative")
+    .min(1, "Paid amount cannot be zero or negative")
     .required("Paid amount is required"),
   className: Yup.string().required("Class name is required"),
 });
@@ -71,7 +71,7 @@ const CourseAndModeFields: React.FC = () => {
       {/* Course Selection */}
       <div>
         <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-          Course
+          Course*
         </label>
         <Field
           as="select"
@@ -110,7 +110,7 @@ const CourseAndModeFields: React.FC = () => {
       {/* Mode Selection */}
       <div>
         <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-          Mode
+          Mode*
         </label>
         <Field
           as="select"
@@ -163,44 +163,44 @@ const AdmisssionForm: React.FC<AdmissionFormProps> = ({
     dispatch(getAllCourses());
   }, [dispatch]);
 
-const courses = useSelector((state: RootState) => state.course.courses);
+  const courses = useSelector((state: RootState) => state.course.courses);
 
-const handleSubmit = (values: StudentEnrollment) => {
-  // find the course
-  const selectedCourse = courses.find((c) => c._id === values.courseId);
+  const handleSubmit = (values: StudentEnrollment) => {
+    // find the course
+    const selectedCourse = courses.find((c) => c._id === values.courseId);
 
-  // find the mode
-  const selectedMode = selectedCourse?.programs?.find(
-    (p: any) => p.mode === values.mode
-  );
+    // find the mode
+    const selectedMode = selectedCourse?.programs?.find(
+      (p: any) => p.mode === values.mode
+    );
 
-  // get price
-  const totalAmount = selectedMode ? selectedMode.price : 0;
-  const remainingAmount = totalAmount - Number(values.paidAmount || 0);
+    // get price
+    const totalAmount = selectedMode ? selectedMode.price : 0;
+    const remainingAmount = totalAmount - Number(values.paidAmount || 0);
 
-  // Call parent submit
-  onSubmit(values);
+    // Call parent submit
+    onSubmit(values);
 
-  // Generate receipt data
-  const newReceiptData = {
-    receiptNumber: generateReceiptNumber(),
-    date: new Date().toLocaleDateString(),
-    time: new Date().toLocaleTimeString(),
-    totalAmount,           
-    remainingAmount,     
-    studentName: values.studentName,
-    mobileNumber: values.mobileNumber,
-    email: values.email,
-    className: values.className,
-    courseName: values.courseName,
-    course: values.courseId,
-    mode: values.mode,
-    paidAmount: values.paidAmount,
+    // Generate receipt data
+    const newReceiptData = {
+      receiptNumber: generateReceiptNumber(),
+      date: new Date().toLocaleDateString(),
+      time: new Date().toLocaleTimeString(),
+      totalAmount,
+      remainingAmount,
+      studentName: values.studentName,
+      mobileNumber: values.mobileNumber,
+      email: values.email,
+      className: values.className,
+      courseName: values.courseName,
+      course: values.courseId,
+      mode: values.mode,
+      paidAmount: values.paidAmount,
+    };
+
+    setReceiptData(newReceiptData);
+    setShowReceipt(true);
   };
-
-  setReceiptData(newReceiptData);
-  setShowReceipt(true);
-};
 
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-6xl rounded-xl bg-white dark:bg-gray-800 mx-auto p-6 shadow">
@@ -219,7 +219,7 @@ const handleSubmit = (values: StudentEnrollment) => {
             {/* Student Name */}
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-                Student Name
+                Student Name*
               </label>
               <Field
                 name="studentName"
@@ -236,7 +236,7 @@ const handleSubmit = (values: StudentEnrollment) => {
             {/* Email */}
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-                Student Email
+                Student Email*
               </label>
               <Field
                 name="email"
@@ -253,7 +253,7 @@ const handleSubmit = (values: StudentEnrollment) => {
             {/* Mobile Number */}
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-                Mobile Number
+                Mobile Number*
               </label>
               <Field
                 name="mobileNumber"
@@ -270,7 +270,7 @@ const handleSubmit = (values: StudentEnrollment) => {
             {/* Paid Amount */}
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-                Paid Amount
+                Paid Amount*
               </label>
               <Field
                 name="paidAmount"
@@ -287,7 +287,7 @@ const handleSubmit = (values: StudentEnrollment) => {
             {/* Class Name */}
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-                Class Name
+                Class Name*
               </label>
               <Field
                 as="select"

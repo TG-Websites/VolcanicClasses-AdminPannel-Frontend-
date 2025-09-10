@@ -68,15 +68,15 @@ const AllPayments = () => {
     fetchPayments(1, validFilters, searchTerm);
   };
 
-    const handleReload = () => {
-        setFilters({});
-        setSearchTerm("");
-        setCurrentPage(1);
-        fetchPayments(1, {}, "");
-    };
+  const handleReload = () => {
+    setFilters({});
+    setSearchTerm("");
+    setCurrentPage(1);
+    fetchPayments(1, {}, "");
+  };
 
-    const navigate = useNavigate();
-    const clickHandler = (id: string) => {
+  const navigate = useNavigate();
+  const clickHandler = (id: string) => {
     navigate(`/order/${id}`);
   };
 
@@ -134,7 +134,7 @@ const AllPayments = () => {
             <thead className="bg-gray-100 dark:bg-gray-700">
               <tr className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 <th className="p-4 whitespace-nowrap">Transaction ID</th>
-                <th className="p-4 whitespace-nowrap">Payment ID</th>
+                <th className="p-4 whitespace-nowrap">Order ID</th>
                 <th className="p-4 whitespace-nowrap">Amount </th>
                 <th className="p-4 whitespace-nowrap">Method</th>
                 <th className="p-4 whitespace-nowrap">Status</th>
@@ -147,13 +147,13 @@ const AllPayments = () => {
                   key={payment._id}
                   className="border-t dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors"
                 >
-                  <td 
-                  onClick={() => clickHandler(payment.order._id)}
-                  className="p-4 text-gray-800 dark:text-gray-100 cursor-pointer">
+                  <td
+                    onClick={() => clickHandler(payment.order._id)}
+                    className="p-4 hover:underline text-gray-800 dark:text-gray-100 cursor-pointer">
                     {payment.transactionId}
                   </td>
-                  <td className="p-4 text-gray-800 dark:text-gray-100">
-                    {payment.order?.paymentId}{" "}
+                  <td className="p-4  text-gray-800 dark:text-gray-100">
+                    {payment.order?.razorpayOrderId}{" "}
                   </td>
                   <td className="p-4 text-gray-700 dark:text-gray-200">{payment.amount}</td>
                   <td className="p-4 text-gray-700 dark:text-gray-300">{payment.method}</td>

@@ -1,14 +1,14 @@
 import { useSelector, useDispatch } from "react-redux";
 import { FaUser, FaSearch } from "react-icons/fa";
 import { AppDispatch, RootState } from "../../../redux/store";
-import {getAllUsers } from "../../../redux/slices/users";
+import { getAllUsers } from "../../../redux/slices/users";
 import { useNavigate } from "react-router";
 // import FilterDropdown from "../components/FilterDropdown";
 import { useState, useEffect } from "react";
 import Pagination from "../../../utils/Pagination";
 import { format } from 'date-fns';
 
-const   StudentList = () => {
+const StudentList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,59 +21,59 @@ const   StudentList = () => {
     (state: RootState) => state.user
   );
 
-const fetchUsers = (
-  page = currentPage,
-  appliedFilters = filters,
-  appliedSearch = searchTerm
-) => {
-  setCurrentPage(page);
+  const fetchUsers = (
+    page = currentPage,
+    appliedFilters = filters,
+    appliedSearch = searchTerm
+  ) => {
+    setCurrentPage(page);
 
-  // always force role=user
-  const query = new URLSearchParams({
-    role: "user",
-    ...appliedFilters,
-    search: appliedSearch,
-    page: String(page),
-    limit: String(limit),
-  }).toString();
+    // always force role=user
+    const query = new URLSearchParams({
+      role: "user",
+      ...appliedFilters,
+      search: appliedSearch,
+      page: String(page),
+      limit: String(limit),
+    }).toString();
 
-  dispatch(getAllUsers(query));
-};
+    dispatch(getAllUsers(query));
+  };
 
 
   useEffect(() => {
     fetchUsers(1, filters, searchTerm);
   }, []);
 
- 
+
 
   const handleSearch = () => {
     setCurrentPage(1);
     fetchUsers(1, filters, searchTerm);
   };
 
-//   const handleApplyFilters = (appliedFilters: { role?: string }) => {
-//     const validFilters = Object.fromEntries(
-//       Object.entries(appliedFilters).filter(([, value]) => value)
-//     );
+  //   const handleApplyFilters = (appliedFilters: { role?: string }) => {
+  //     const validFilters = Object.fromEntries(
+  //       Object.entries(appliedFilters).filter(([, value]) => value)
+  //     );
 
-//     setFilters(validFilters);
-//     setCurrentPage(1);
-//     fetchUsers(1, validFilters, searchTerm);
-//   };
+  //     setFilters(validFilters);
+  //     setCurrentPage(1);
+  //     fetchUsers(1, validFilters, searchTerm);
+  //   };
 
-const handleReload = () => {
-  setSearchTerm("");
-  setFilters({ role: "user" });
-  setCurrentPage(1);
-  fetchUsers(1, { role: "user" }, "");
-};
+  const handleReload = () => {
+    setSearchTerm("");
+    setFilters({ role: "user" });
+    setCurrentPage(1);
+    fetchUsers(1, { role: "user" }, "");
+  };
 
   const clickHandler = (id: string) => {
     navigate(`/admin/student/${id}`);
   };
 
-  
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -113,7 +113,7 @@ const handleReload = () => {
         </div>
       </div>
 
-     
+
       {error && <p className="text-red-500">{error}</p>}
 
       {!loading && !error && users.length === 0 && (
@@ -145,9 +145,10 @@ const handleReload = () => {
               {users.map((user) => (
                 <tr
                   key={user._id}
-                  className="border-t dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors"
+                  onClick={() => clickHandler(user._id)}
+                  className="border-t cursor-pointer dark:border-gray-700 hover:bg-gray-100 bg-white dark:bg-gray-800 transition-colors"
                 >
-                  <td className="p-4" onClick={() => clickHandler(user._id)}>
+                  <td className="p-4" >
                     <div className="flex-shrink-0 h-10 w-10 flex items-center cursor-pointer justify-center bg-brand-100 dark:bg-brand-500 rounded-full">
                       <FaUser className="text-brand-500 dark:text-white " />
                     </div>

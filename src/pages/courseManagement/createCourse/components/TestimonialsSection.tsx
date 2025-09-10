@@ -1,4 +1,4 @@
-import { FormikProps } from 'formik';
+import { FormikProps, getIn } from 'formik';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CourseFormValues } from '../types';
@@ -9,15 +9,14 @@ import { uploadImage, resetImageState } from '../../../../redux/slices/cloudinar
 const TestimonialsSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => {
   const testimonials = formik.values.testimonials || [];
   const dispatch = useDispatch<AppDispatch>();
-
-  const { url, uploading } = useSelector((state: RootState) => state.cloudinary);
+  const { url, key, uploading } = useSelector((state: RootState) => state.cloudinary);
 
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
 
   const handleAddTestimonial = () => {
     formik.setFieldValue('testimonials', [
       ...testimonials,
-      { name: '', scoreSummary: '', subjectScore: '', quote: '', photo: null },
+      { name: '', scoreSummary: '', subjectScore: '', quote: '', photoUrl: null }, // <- photoUrl
     ]);
   };
 
@@ -36,24 +35,25 @@ const TestimonialsSection = ({ formik }: { formik: FormikProps<CourseFormValues>
     formik.setFieldValue('testimonials', newTestimonials);
   };
 
-  const handlePhotoChange = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     setUploadingIndex(index);
-    dispatch(uploadImage(file));
+    dispatch(uploadImage({ file, key: "testimonials" }));
   };
 
-  // After upload completes, update the corresponding testimonial photo field
   useEffect(() => {
-    if (url !== null && uploadingIndex !== null) {
+    if (url !== null && key !== null && key === "testimonials" && uploadingIndex !== null) {
       const newTestimonials = [...testimonials];
-      newTestimonials[uploadingIndex].photoUrl = url;
+      newTestimonials[uploadingIndex].photoUrl = url; // align with schema/type
       formik.setFieldValue('testimonials', newTestimonials);
       dispatch(resetImageState());
       setUploadingIndex(null);
     }
   }, [url]);
+
+  const err = (path: string) => getIn(formik.errors, path);
+  const touched = (path: string) => getIn(formik.touched, path);
 
   return (
     <CollapsibleSection title="Student Testimonials">
@@ -62,51 +62,104 @@ const TestimonialsSection = ({ formik }: { formik: FormikProps<CourseFormValues>
           <div key={index} className="border border-gray-200 rounded-lg p-4 relative">
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Name */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Student Name*</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Student Name <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     value={testimonial.name}
                     onChange={(e) => handleTestimonialChange(index, 'name', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
+                    onBlur={formik.handleBlur}
+                    name={`testimonials.${index}.name`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${touched(`testimonials.${index}.name`) && err(`testimonials.${index}.name`)
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-gray-300 focus:ring-blue-500'
+                      }`}
                   />
+                  {touched(`testimonials.${index}.name`) && err(`testimonials.${index}.name`) && (
+                    <p className="mt-1 text-sm text-red-600">{err(`testimonials.${index}.name`)}</p>
+                  )}
                 </div>
+
+                {/* Score Summary */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Score Summary*</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Score Summary <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     value={testimonial.scoreSummary}
                     onChange={(e) => handleTestimonialChange(index, 'scoreSummary', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
+                    onBlur={formik.handleBlur}
+                    name={`testimonials.${index}.scoreSummary`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${touched(`testimonials.${index}.scoreSummary`) &&
+                      err(`testimonials.${index}.scoreSummary`)
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-gray-300 focus:ring-blue-500'
+                      }`}
                   />
+                  {touched(`testimonials.${index}.scoreSummary`) &&
+                    err(`testimonials.${index}.scoreSummary`) && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {err(`testimonials.${index}.scoreSummary`)}
+                      </p>
+                    )}
                 </div>
+
+                {/* Subject Score */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Subject Score*</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Subject Score <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     value={testimonial.subjectScore}
                     onChange={(e) => handleTestimonialChange(index, 'subjectScore', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
+                    onBlur={formik.handleBlur}
+                    name={`testimonials.${index}.subjectScore`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${touched(`testimonials.${index}.subjectScore`) &&
+                      err(`testimonials.${index}.subjectScore`)
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-gray-300 focus:ring-blue-500'
+                      }`}
                   />
+                  {touched(`testimonials.${index}.subjectScore`) &&
+                    err(`testimonials.${index}.subjectScore`) && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {err(`testimonials.${index}.subjectScore`)}
+                      </p>
+                    )}
                 </div>
               </div>
 
+              {/* Quote */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Student Quote*</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Student Quote <span className="text-red-500">*</span>
+                </label>
                 <textarea
                   value={testimonial.quote}
                   onChange={(e) => handleTestimonialChange(index, 'quote', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  onBlur={formik.handleBlur}
+                  name={`testimonials.${index}.quote`}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${touched(`testimonials.${index}.quote`) && err(`testimonials.${index}.quote`)
+                    ? 'border-red-500 focus:ring-red-500'
+                    : 'border-gray-300 focus:ring-blue-500'
+                    }`}
                   rows={3}
-                  required
                 />
+                {touched(`testimonials.${index}.quote`) && err(`testimonials.${index}.quote`) && (
+                  <p className="mt-1 text-sm text-red-600">{err(`testimonials.${index}.quote`)}</p>
+                )}
               </div>
 
+              {/* Photo */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Student Photo</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Student Photo
+                </label>
                 <input
                   type="file"
                   accept="image/*"
@@ -126,6 +179,13 @@ const TestimonialsSection = ({ formik }: { formik: FormikProps<CourseFormValues>
                     />
                   </div>
                 )}
+                {/* photoUrl validation (if you set it required in schema later) */}
+                {touched(`testimonials.${index}.photoUrl`) &&
+                  err(`testimonials.${index}.photoUrl`) && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {err(`testimonials.${index}.photoUrl`)}
+                    </p>
+                  )}
               </div>
             </div>
 

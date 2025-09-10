@@ -41,7 +41,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
             {/* Title */}
             <div>
               <label htmlFor="title" className="block text-sm font-medium mb-1 flex items-center gap-2">
-                <FiEdit2 /> Title
+                <FiEdit2 /> Title*
               </label>
               <Field
                 name="title"
@@ -55,7 +55,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
             {/* Content */}
             <div>
               <label htmlFor="content" className="block text-sm font-medium mb-1 flex items-center gap-2">
-                <FiFileText /> Content
+                <FiFileText /> Content*
               </label>
               <Field
                 name="content"

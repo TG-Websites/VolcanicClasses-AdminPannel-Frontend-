@@ -8,17 +8,17 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const MediaSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { url, uploading } = useSelector((state: RootState) => state.cloudinary);
+  const { url, key, uploading } = useSelector((state: RootState) => state.cloudinary);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.currentTarget.files?.[0];
     if (file) {
-      dispatch(uploadImage(file));
+      dispatch(uploadImage({ file, key: "bannerImageUrl" }));
     }
   };
 
   useEffect(() => {
-    if (url) {
+    if (url && key === "bannerImageUrl") {
       formik.setFieldValue('bannerImageUrl', url);
       dispatch(resetImageState());
     }
@@ -78,12 +78,15 @@ const MediaSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => 
             </div>
           )}
           <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Recommended size: 1200x400 pixels</p>
+          {formik.touched.bannerImageUrl && formik.errors.bannerImageUrl && (
+            <p className="mt-1 text-sm text-red-600">{formik.errors.bannerImageUrl}</p>
+          )}
         </div>
 
         {/* Floating Highlights */}
         <div >
           <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">
-            Course Highlights
+            Course Highlights*
           </label>
           <div className="space-y-2">
             {formik.values.floatingHighlights.map((highlight, index) => (
@@ -115,6 +118,9 @@ const MediaSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => 
                     </svg>
                   </button>
                 )}
+                {formik.touched.floatingHighlights && formik.errors.floatingHighlights && (
+                  <p className="mt-1 text-sm text-red-600">{formik.errors.floatingHighlights[index]}</p>
+                )}
               </div>
             ))}
             <button
@@ -136,6 +142,7 @@ const MediaSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) => 
               </svg>
               Add another highlight
             </button>
+
           </div>
         </div>
       </div>

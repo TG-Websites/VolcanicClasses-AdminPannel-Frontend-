@@ -1,5 +1,5 @@
 // FeaturesSection.tsx
-import { FormikProps } from 'formik';
+import { FormikProps, getIn } from 'formik';
 import { CourseFormValues } from '../types';
 import CollapsibleSection from './CollapsibleSection';
 
@@ -37,7 +37,7 @@ const FeaturesSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) 
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  FontAwesome Icon
+                  FontAwesome Icon*
                 </label>
                 <input
                   type="text"
@@ -46,10 +46,16 @@ const FeaturesSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) 
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="e.g. fa-atom"
                 />
+                {getIn(formik.touched, `whyChooseUs.${index}.icon`) &&
+                  getIn(formik.errors, `whyChooseUs.${index}.icon`) && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {getIn(formik.errors, `whyChooseUs.${index}.icon`)}
+                    </p>
+                  )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Title
+                  Title*
                 </label>
                 <input
                   type="text"
@@ -58,10 +64,16 @@ const FeaturesSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) 
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Feature title"
                 />
+                {getIn(formik.touched, `whyChooseUs.${index}.title`) &&
+                  getIn(formik.errors, `whyChooseUs.${index}.title`) && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {getIn(formik.errors, `whyChooseUs.${index}.title`)}
+                    </p>
+                  )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
+                  Description*
                 </label>
                 <textarea
                   value={feature.description}
@@ -70,6 +82,12 @@ const FeaturesSection = ({ formik }: { formik: FormikProps<CourseFormValues> }) 
                   placeholder="Feature description"
                   rows={3}
                 />
+                {getIn(formik.touched, `whyChooseUs.${index}.description`) &&
+                  getIn(formik.errors, `whyChooseUs.${index}.description`) && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {getIn(formik.errors, `whyChooseUs.${index}.description`)}
+                    </p>
+                  )}
               </div>
             </div>
             {features.length > 1 && (

@@ -1,5 +1,5 @@
 // TopicCoverageSection.tsx
-import { FormikProps } from 'formik';
+import { FormikProps, getIn } from 'formik';
 import { CourseFormValues } from '../types';
 import CollapsibleSection from './CollapsibleSection';
 
@@ -37,7 +37,7 @@ const TopicCoverageSection = ({ formik }: { formik: FormikProps<CourseFormValues
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Section Title
+                  Section Title*
                 </label>
                 <input
                   type="text"
@@ -46,10 +46,16 @@ const TopicCoverageSection = ({ formik }: { formik: FormikProps<CourseFormValues
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="e.g. Mechanics, Thermodynamics"
                 />
+                {getIn(formik.touched, `topicCoverage.${index}.title`) &&
+                  getIn(formik.errors, `topicCoverage.${index}.title`) && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {getIn(formik.errors, `topicCoverage.${index}.title`)}
+                    </p>
+                  )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Topics List
+                  Topics List*
                 </label>
                 <textarea
                   value={topic.description}
@@ -58,6 +64,12 @@ const TopicCoverageSection = ({ formik }: { formik: FormikProps<CourseFormValues
                   placeholder="List topics separated by commas or new lines"
                   rows={4}
                 />
+                {getIn(formik.touched, `topicCoverage.${index}.description`) &&
+                  getIn(formik.errors, `topicCoverage.${index}.description`) && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {getIn(formik.errors, `topicCoverage.${index}.description`)}
+                    </p>
+                  )}
               </div>
             </div>
             {topics.length > 1 && (

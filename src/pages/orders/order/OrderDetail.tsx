@@ -74,20 +74,20 @@ const OrderDetail = () => {
     failed: <FiXCircle className="text-red-500" />,
   };
 
-const handleSubmitAmount = async () => {
-  await dispatch(
-    updateOrder({
-      id: id as string,
-      orderData: { paidAmount },
-    })
-  );
+  const handleSubmitAmount = async () => {
+    await dispatch(
+      updateOrder({
+        id: id as string,
+        orderData: { paidAmount },
+      })
+    );
 
-  // re-fetch updated order
-  await dispatch(getOrderById(id as string));
+    // re-fetch updated order
+    await dispatch(getOrderById(id as string));
 
-  setIsModalOpen(false);
-  setShowReceipt(true);
-};
+    setIsModalOpen(false);
+    setShowReceipt(true);
+  };
 
   return (
     <div className="max-w-4xl mx-auto bg-white dark:bg-gray-900 shadow-lg rounded-xl p-4 sm:p-8 mt-8 transition-colors">
@@ -146,7 +146,7 @@ const handleSubmitAmount = async () => {
                 </>
               ) : (
                 <>
-                  <strong>Payment ID:</strong> {String(order.paymentId)}
+                  <strong>Order ID:</strong> {String(order.razorpayOrderId)}
                 </>
               )
             }

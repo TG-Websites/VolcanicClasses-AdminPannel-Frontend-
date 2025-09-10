@@ -83,7 +83,7 @@ const EditInquiries: React.FC = () => {
         </label>
     );
 
-   if (loading) {
+    if (loading) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-500"></div>
@@ -99,7 +99,7 @@ const EditInquiries: React.FC = () => {
             <form onSubmit={formik.handleSubmit} className="space-y-4 dark:text-gray-200">
                 {/* Name */}
                 <div>
-                    <LabelWithIcon icon={MdPerson} text="Full Name" />
+                    <LabelWithIcon icon={MdPerson} text="Full Name*" />
                     <input
                         type="text"
                         name="name"
@@ -117,7 +117,7 @@ const EditInquiries: React.FC = () => {
                 {/* Phone + Email */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <LabelWithIcon icon={MdPhone} text="Phone Number" />
+                        <LabelWithIcon icon={MdPhone} text="Phone Number*" />
                         <input
                             type="number"
                             name="phone"
@@ -133,7 +133,7 @@ const EditInquiries: React.FC = () => {
                     </div>
 
                     <div>
-                        <LabelWithIcon icon={MdEmail} text="Email Address" />
+                        <LabelWithIcon icon={MdEmail} text="Email Address*" />
                         <input
                             type="email"
                             name="email"
@@ -151,7 +151,7 @@ const EditInquiries: React.FC = () => {
 
                 {/* Course */}
                 <div>
-                    <LabelWithIcon icon={MdSchool} text="Interested Course" />
+                    <LabelWithIcon icon={MdSchool} text="Interested Course*" />
                     <CourseDropdown
                         name="courseInterest"
                         value={formik.values.courseInterest}

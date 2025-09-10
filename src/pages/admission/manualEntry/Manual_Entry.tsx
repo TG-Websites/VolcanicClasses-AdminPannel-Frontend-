@@ -74,7 +74,7 @@ const AdmissionForm: React.FC = () => {
       <form onSubmit={formik.handleSubmit} className="space-y-4 dark:text-gray-200">
 
         <div>
-          <LabelWithIcon icon={MdPerson} text="Full Name" />
+          <LabelWithIcon icon={MdPerson} text="Full Name*" />
           <input
             type="text"
             name="name"
@@ -91,7 +91,7 @@ const AdmissionForm: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <LabelWithIcon icon={MdPhone} text="Phone Number" />
+            <LabelWithIcon icon={MdPhone} text="Phone Number*" />
             <input
               type="number"
               name="phone"
@@ -107,7 +107,7 @@ const AdmissionForm: React.FC = () => {
           </div>
 
           <div>
-            <LabelWithIcon icon={MdEmail} text="Email Address" />
+            <LabelWithIcon icon={MdEmail} text="Email Address*" />
             <input
               type="email"
               name="email"
@@ -124,7 +124,7 @@ const AdmissionForm: React.FC = () => {
         </div>
 
         <div>
-          <LabelWithIcon icon={MdSchool} text="Interested Course" />
+          <LabelWithIcon icon={MdSchool} text="Interested Course*" />
           <CourseDropdown
             name="courseInterest"
             value={formik.values.courseInterest}

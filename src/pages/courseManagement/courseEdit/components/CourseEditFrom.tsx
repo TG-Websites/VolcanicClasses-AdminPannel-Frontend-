@@ -13,6 +13,7 @@ import TestimonialsSection from '../../createCourse/components/TestimonialsSecti
 import CTASection from '../../createCourse/components/CTASection';
 import SEOSection from '../../createCourse/components/SEOSection';
 import { CourseFormValues } from '../../createCourse/types';
+import { courseValidationSchema } from '../../createCourse/validationSchema';
 
 interface CourseEditFormProps {
   initialData: CourseFormValues;
@@ -23,6 +24,8 @@ const CourseEditForm = ({ initialData, onSubmit }: CourseEditFormProps) => {
   const formik = useFormik({
     initialValues: initialData,
     enableReinitialize: true,
+    validationSchema: courseValidationSchema,
+
     onSubmit,
   });
 
