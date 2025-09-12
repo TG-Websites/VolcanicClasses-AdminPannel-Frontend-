@@ -3,8 +3,8 @@ import axios from 'axios';
 const token = localStorage.getItem('token');
 // Create Axios instance
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000',   
-   headers: {
+  baseURL: 'https://back.volcanicclasses.org',
+  headers: {
     Authorization: `Bearer ${token}`
   }
 });
