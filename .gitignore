@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # version details
-version-details.json
+/public/version-details.json

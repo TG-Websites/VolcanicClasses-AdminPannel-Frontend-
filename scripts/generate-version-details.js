@@ -18,6 +18,6 @@ const versionInfo = {
   commitHash: getCommitHash(),
 };
 
-fs.writeFileSync('./version-details.json', JSON.stringify(versionInfo, null, 2));
+fs.writeFileSync('./public/version-details.json', JSON.stringify(versionInfo, null, 2));
 
 console.log(`version-details.json updated to version ${versionInfo.version} and commit ${versionInfo.commitHash}`);

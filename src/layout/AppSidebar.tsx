@@ -1,4 +1,3 @@
-import VersionInfo from "../components/common/VersionInfo";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { LiaUsersCogSolid } from "react-icons/lia";

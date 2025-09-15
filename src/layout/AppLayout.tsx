@@ -1,3 +1,4 @@
+import AppFooter from "./AppFooter";
 import { SidebarProvider, useSidebar } from "../context/SidebarContext";
 import { Outlet } from "react-router";
 import AppHeader from "./AppHeader";
@@ -22,6 +23,7 @@ const LayoutContent: React.FC = () => {
         <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
           <Outlet />
         </div>
+        <AppFooter />
       </div>
     </div>
   );
