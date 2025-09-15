@@ -165,16 +165,14 @@ const AdmisssionForm: React.FC<AdmissionFormProps> = ({
 
   const courses = useSelector((state: RootState) => state.course.courses);
 
-  const handleSubmit = (values: StudentEnrollment) => {
+  const handleSubmit = (values: StudentEnrollment, { resetForm }: any) => {
     // find the course
     const selectedCourse = courses.find((c) => c._id === values.courseId);
 
-    // find the mode
     const selectedMode = selectedCourse?.programs?.find(
       (p: any) => p.mode === values.mode
     );
 
-    // get price
     const totalAmount = selectedMode ? selectedMode.price : 0;
     const remainingAmount = totalAmount - Number(values.paidAmount || 0);
 
@@ -200,7 +198,11 @@ const AdmisssionForm: React.FC<AdmissionFormProps> = ({
 
     setReceiptData(newReceiptData);
     setShowReceipt(true);
+
+    // ✅ Reset form fields after submit
+    resetForm();
   };
+
 
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-6xl rounded-xl bg-white dark:bg-gray-800 mx-auto p-6 shadow">
