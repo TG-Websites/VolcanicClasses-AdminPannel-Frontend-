@@ -6,6 +6,7 @@ import axiosInstance from '../../utils/axiosInstance';
 interface Course {
   _id: string;
   title: string;
+  bannerImageUrl:string;
 }
 
 interface UserCourse {

@@ -23,14 +23,16 @@ interface Mode {
 export const studentEnrollmentSchema = Yup.object().shape({
   studentName: Yup.string().required("Student Name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
-  mobileNumber: Yup.string()
-    .matches(/^\d{10}$/, "Mobile number must be 10 digits")
+  mobileNumber: Yup.number()
+    .typeError("Mobile number must be 10 digits")
     .required("Mobile number is required"),
   paidAmount: Yup.number()
     .typeError("Paid amount must be a number")
     .min(1, "Paid amount cannot be zero or negative")
     .required("Paid amount is required"),
   className: Yup.string().required("Class name is required"),
+  courseId: Yup.string().required("Course is required"),
+  mode: Yup.string().required("Mode is required"),
 });
 
 interface AdmissionFormProps {
@@ -243,6 +245,7 @@ const AdmisssionForm: React.FC<AdmissionFormProps> = ({
               <Field
                 name="email"
                 placeholder="Enter Email"
+                type="email"
                 className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 dark:bg-gray-700"
               />
               <ErrorMessage
@@ -260,6 +263,7 @@ const AdmisssionForm: React.FC<AdmissionFormProps> = ({
               <Field
                 name="mobileNumber"
                 placeholder="Enter Mobile Number"
+                maxLength={10}
                 className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 dark:bg-gray-700"
               />
               <ErrorMessage
@@ -277,6 +281,7 @@ const AdmisssionForm: React.FC<AdmissionFormProps> = ({
               <Field
                 name="paidAmount"
                 placeholder="Enter Paid Amount"
+                type="number"
                 className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 dark:bg-gray-700"
               />
               <ErrorMessage

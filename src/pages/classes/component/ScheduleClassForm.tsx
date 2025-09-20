@@ -18,11 +18,34 @@ interface ScheduleClassFormProps {
 const validationSchema = Yup.object().shape({
   course: Yup.string().required('Course ID is required'),
   instructor: Yup.string().required('Instructor is required'),
-  date: Yup.date().required('Date is required'),
-  time: Yup.string().required('Time is required'),
-  mode: Yup.string().oneOf(['online', 'offline']).required('Mode is required'),
-  link: Yup.string().url('Must be a valid URL').required('Link is required'),
+
+  // Date: required + must be today or in the future
+  date: Yup.date()
+    .required('Date is required')
+    .test('is-future', 'Date cannot be in the past', function (value) {
+      if (!value) return false;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // clear time for comparison
+      return new Date(value) >= today;
+    }),
+
+  // Time: must match hh:mm AM/PM format
+  time: Yup.string()
+    .required('Time is required')
+    .matches(
+      /^(0?[1-9]|1[0-2]):[0-5][0-9]\s?(AM|PM)$/i,
+      'Time must be in hh:mm AM/PM format (e.g., 10:30 AM)'
+    ),
+
+  mode: Yup.string()
+    .oneOf(['online', 'offline', 'hybrid'], 'Invalid mode')
+    .required('Mode is required'),
+
+  link: Yup.string()
+    .url('Must be a valid URL')
+    .required('Link is required'),
 });
+
 
 const ScheduleClassForm: React.FC<ScheduleClassFormProps> = ({
   initialValues,

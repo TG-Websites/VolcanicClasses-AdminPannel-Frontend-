@@ -93,9 +93,9 @@ const AdmissionForm: React.FC = () => {
           <div>
             <LabelWithIcon icon={MdPhone} text="Phone Number*" />
             <input
-              type="number"
               name="phone"
               placeholder="Phone Number"
+              maxLength={10}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500 dark:focus:ring-brand-500 dark:bg-gray-700 dark:text-white"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}

@@ -1,7 +1,8 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { UserFormValues } from '../type';
-import { FiUser, FiMail, FiLock, FiUserCheck } from 'react-icons/fi';
+import { FiUser, FiMail, FiLock, FiUserCheck, FiEye, FiEyeOff } from 'react-icons/fi';
+import { useState } from 'react';
 
 interface UserFormProps {
   initialValues: UserFormValues;
@@ -27,6 +28,11 @@ const validationSchema = Yup.object({
 });
 
 const UserForm = ({ initialValues, isEditMode = false, onSubmit }: UserFormProps) => {
+
+
+  const [showPassword, setShowPassword] = useState(false);
+
+
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white dark:bg-gray-800 shadow-md rounded-xl">
       <h2 className="text-xl font-bold mb-4 dark:text-gray-300">
@@ -70,18 +76,35 @@ const UserForm = ({ initialValues, isEditMode = false, onSubmit }: UserFormProps
           {/* Password (only in create mode) */}
           {!isEditMode && (
             <div>
-              <label htmlFor="password" className=" font-medium mb-1 flex items-center gap-2">
+              <label
+                htmlFor="password"
+                className="font-medium mb-1 flex items-center gap-2"
+              >
                 <FiLock /> Password*
               </label>
-              <Field
-                type="password"
+              <div className="relative">
+                <Field
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter password"
+                  className="mt-1 block w-full border border-gray-300 dark:border-gray-600 outline-none dark:bg-gray-700 rounded-md px-3 py-2 pr-10 shadow-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-500 dark:text-gray-300"
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
+              </div>
+              <ErrorMessage
                 name="password"
-                placeholder="Enter password"
-                className="mt-1 block w-full border border-gray-300 dark:border-gray-600 outline-none dark:bg-gray-700 rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                component="div"
+                className="text-red-500 text-sm"
               />
-              <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
             </div>
           )}
+
 
           {/* Role */}
           <div>
